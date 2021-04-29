@@ -3,8 +3,8 @@ import sys
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
-SECRET_KEY = os.environ.get('BUNJGAMES_SECRET_KEY', '*w')
-DEBUG = os.environ.get('BUNJGAMES_DEBUG', 'False').lower() != 'false'
+SECRET_KEY = os.environ.get('SECRET_KEY', '*w')
+DEBUG = os.environ.get('DEBUG', 'False').lower() != 'false'
 
 ALLOWED_HOSTS = ['*']
 
@@ -67,11 +67,11 @@ CHANNEL_LAYERS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('BUNJGAMES_DATABASE_NAME', 'bunjgames'),
-        'USER': os.environ.get('BUNJGAMES_DATABASE_USER', 'postgres'),
-        'PASSWORD': os.environ.get('BUNJGAMES_DATABASE_PASSWORD', 'postgres'),
-        'HOST': os.environ.get('BUNJGAMES_DATABASE_HOST', '127.0.0.1'),
-        'PORT': int(os.environ.get('BUNJGAMES_DATABASE_PORT', '5432')),
+        'NAME': os.environ.get('DATABASE_NAME', 'bunjgames'),
+        'USER': os.environ.get('DATABASE_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', 'postgres'),
+        'HOST': os.environ.get('DATABASE_HOST', '127.0.0.1'),
+        'PORT': int(os.environ.get('DATABASE_PORT', '5432')),
     }
 }
 
@@ -107,7 +107,7 @@ LOGGING = {
         },
     },
     'root': {
-        'handlers': ['console', 'file'],
+        'handlers': ['console'],
         'level': 'DEBUG',
     },
 }

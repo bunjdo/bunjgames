@@ -1,5 +1,6 @@
 FROM node:alpine AS builder
 
+RUN apk add g++ make python
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
@@ -11,11 +12,9 @@ COPY . ./
 RUN npm run build
 
 
-
 FROM nginx:alpine
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/build /app
+COPY --from=builder /app/public /app
 
-CMD ["nginx", "-g", "'daemon off;'"]
-
+CMD ["nginx", "-g", "daemon off;"]
