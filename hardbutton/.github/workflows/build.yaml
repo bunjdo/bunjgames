@@ -1,0 +1,61 @@
+name: pyinstaller linux
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: pyinstaller linux
+      uses: JackMcKew/pyinstaller-action-linux@main
+      with:
+        path: ./
+
+    - name: pyinstaller windows
+      uses: JackMcKew/pyinstaller-action-windows@main
+      with:
+        path: ./
+
+    - name: version
+      run: echo "::set-output name=version::$(./dist/linux/main --version)"
+      id: version
+
+    - name: release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        draft: false
+        prerelease: false
+        release_name: ${{ steps.version.outputs.version }}
+        tag_name: ${{ github.ref }}
+        body_path: CHANGELOG.md
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
+    - name: upload linux artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/linux/main
+        asset_name: bunjgames-hardbutton
+        asset_content_type: application/x-elf
+
+    - name: upload windows artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/windows/main.exe
+        asset_name: bunjgames-hardbutton.exe
+        asset_content_type: application/x-msdownload

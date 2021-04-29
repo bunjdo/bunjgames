@@ -1,0 +1,10 @@
+django
+djangorestframework
+django-cors-headers
+django-sslserver
+channels>=3.0.1
+daphne
+psycopg2-binary
+
+requests
+hashids

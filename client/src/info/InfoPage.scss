@@ -1,0 +1,47 @@
+@import "src/Colors";
+
+:global {
+  #root {
+    position: unset;
+  }
+}
+
+body {
+  background-color: $baseBackground;
+}
+
+.body {
+  background-color: $baseBackground;
+  color: $baseTextColor;
+
+  .header {
+    background-color: $baseBackgroundDark;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+
+    .title {
+      font-size: 32px;
+    }
+
+    .textRight {
+      text-align: right;
+    }
+  }
+
+  a {
+    color: $baseTextColor;
+  }
+
+  .category {
+    padding: 16px;
+  }
+
+  .subtitle {
+    font-size: 28px;
+  }
+
+  .alignRight {
+    right: 0;
+  }
+}

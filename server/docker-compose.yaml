@@ -1,0 +1,41 @@
+version: '3.0'
+services:
+  db:
+    image: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./media:/srv/server/media
+      - ./logs:/srv/server/logs
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=bunjgames
+    ports:
+      - 127.0.0.1:5432:5432
+    networks:
+      - overlay
+#  server:
+#    build:
+#      context: .
+#    image: &server bunjgames-server:last
+#    volumes:
+#      - .:/srv/server/
+#    environment:
+#      - BUNJGAMES_SECRET_KEY=af3D3r32r43tfw234fdfgff^h%&fhf77&^&TR%^&F&6
+#      - BUNJGAMES_DEBUG=true
+#      - BUNJGAMES_DATABASE_NAME=bunjgames
+#      - BUNJGAMES_DATABASE_USER=postgres
+#      - BUNJGAMES_DATABASE_PASSWORD=postgres
+#      - BUNJGAMES_DATABASE_HOST=db
+#      - BUNJGAMES_DATABASE_PORT=5432
+#    ports:
+#      - 8000:80
+#    networks:
+#      - overlay
+#    depends_on:
+#      - db
+
+volumes:
+  db-data:
+
+networks:
+  overlay:
