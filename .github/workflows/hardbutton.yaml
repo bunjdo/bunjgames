@@ -3,8 +3,8 @@ name: pyinstaller linux
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    paths:
+      - 'hardbutton/**'
 
 jobs:
   build:
@@ -17,15 +17,15 @@ jobs:
     - name: pyinstaller linux
       uses: JackMcKew/pyinstaller-action-linux@main
       with:
-        path: ./
+        path: ./hardbutton
 
     - name: pyinstaller windows
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
-        path: ./
+        path: ./hardbutton
 
     - name: version
-      run: echo "::set-output name=version::$(./dist/linux/main --version)"
+      run: echo "::set-output name=version::$(./hardbutton/dist/linux/main --version)"
       id: version
 
     - name: release
@@ -46,7 +46,7 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/linux/main
+        asset_path: ./hardbutton/dist/linux/main
         asset_name: bunjgames-hardbutton
         asset_content_type: application/x-elf
 
@@ -56,6 +56,6 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/windows/main.exe
+        asset_path: ./hardbutton/dist/windows/main.exe
         asset_name: bunjgames-hardbutton.exe
         asset_content_type: application/x-msdownload
