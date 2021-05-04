@@ -33,6 +33,14 @@ class GameHandler:
         self._ip_to_player_id_binding = {}
         self.player_to_setup = None
 
+    def _generate_button_click_params(self, player_id):
+        if self._game_name == 'weakest':
+            return dict()
+        elif self._game_name == 'feud':
+            return dict(team_id=player_id)
+        else:
+            return dict(player_id=player_id)
+
     @property
     def websocket_url(self):
         return f'{self._url}{"" if self._url.endswith("/") else "/"}{self._game_name}/ws/{self._token}'
@@ -78,14 +86,19 @@ class GameHandler:
                 print(f'Button click from player {player["name"]} ({message})')
                 asyncio.ensure_future(self.websocket.send(json.dumps(dict(
                     method=self._button_method_name,
-                    params=dict(player_id=player_id)
+                    params=self._generate_button_click_params(player_id)
                 ))))
+            elif self.websocket:
+                print(f'Button click from unknown player ({message})')
 
 
 async def websocket_handler(event_loop, game_handler):
     while True:
         print(f'Connecting to {game_handler.websocket_url}...')
-        async with websockets.connect(game_handler.websocket_url, ssl=ssl._create_unverified_context()) as websocket:
+        ssl_obj = None
+        if game_handler.websocket_url.startswith('wss://'):
+            ssl_obj = ssl._create_unverified_context()
+        async with websockets.connect(game_handler.websocket_url, ssl=ssl_obj) as websocket:
             game_handler.websocket = websocket
             print(f'Connected to {game_handler.websocket_url}')
             while True:

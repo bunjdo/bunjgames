@@ -1,6 +1,7 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
 #include <WiFiUdp.h>
+#include "accessPoints.h"
 
 ESP8266WiFiMulti wifiMulti;
 WiFiUDP udp;
@@ -17,9 +18,6 @@ volatile int button = HIGH;
 void handleButtonPress() {
   if (button == LOW) {
       button = HIGH;
-      
-      Serial.println("Sending");
-
       udp.beginPacketMulticast(broadcastAddress, port, WiFi.localIP());
       udp.write(buffer);
       udp.endPacket();
@@ -39,11 +37,12 @@ void setup() {
     WiFi.mode(WIFI_STA);
     WiFi.disconnect();
 
-    wifiMulti.addAP("MikroTik-bunjdo", "84236132729aA");
+    for (const char** accessPoint: ACCESS_POINTS) {
+      wifiMulti.addAP(accessPoint[0], accessPoint[1]);
+    }
 
     udp.begin(port);
 
-    //pinMode(buttonPin, INPUT);
     pinMode (buttonPin, INPUT);
     attachInterrupt(digitalPinToInterrupt(buttonPin), interrupt, FALLING);
 
@@ -83,18 +82,4 @@ void loop() {
 
   handleButtonPress();
   delay(1);
-  
- 
-
-  
-/*
-    while(WiFi.isConnected()) {
-        handleButtonPress();
-        delay(50);
-    }
-
-    WiFi.disconnect();
-    Serial.println("Wifi Disconnected");
-    delay(1000);
-*/
 }

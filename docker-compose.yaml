@@ -1,10 +1,12 @@
 version: '3.0'
 services:
-  client:
+  client-dev:
     build:
       context: client/
       dockerfile: Dockerfile.dev
-    command: npm run dev-server
+    environment:
+      - REACT_APP_API_ENDPOINT=http://localhost:8000/
+      - REACT_APP_WS_ENDPOINT=ws://localhost:8000/
     ports:
       - 8080:8080
   server:

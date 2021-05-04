@@ -1,6 +1,7 @@
 FROM node:alpine
 
-RUN apk add g++ make python
+ENV NODE_ENV development
+RUN apk add --update --no-cache g++ make python2
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install

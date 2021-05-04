@@ -9,6 +9,7 @@ services:
     build:
       context: server/
     image: &server bunjgames-server:last
+    command: daphne -b 0.0.0.0 -p 80 server.asgi:application
     environment: &server_environment
       - DEBUG=false
       - DATABASE_HOST=db
