@@ -34,8 +34,8 @@ jobs:
       with:
         draft: false
         prerelease: false
-        release_name: ${{ steps.version.outputs.version }}
-        tag_name: ${{ github.ref }}
+        release_name: hardbutton-${{ steps.version.outputs.version }}
+        tag_name: hardbutton-${{ steps.version.outputs.version }}
         body_path: ./hardbutton/CHANGELOG.md
       env:
         GITHUB_TOKEN: ${{ github.token }}
