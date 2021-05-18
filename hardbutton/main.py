@@ -1,14 +1,11 @@
 import asyncio
-
 import argparse as argparse
-
 import netifaces
 import websockets
 import socket
 import json
 from concurrent.futures import ThreadPoolExecutor
 from typing import Tuple, Union
-
 import ssl
 
 
