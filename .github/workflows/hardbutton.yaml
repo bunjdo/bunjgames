@@ -1,4 +1,4 @@
-name: pyinstaller linux
+name: Build hardbutton
 
 on:
   push:
