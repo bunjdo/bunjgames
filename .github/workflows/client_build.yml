@@ -5,6 +5,7 @@ on:
     branches: [ master ]
     paths:
       - 'client/**'
+      - '.github/workflows/client_build.yml'
 
 jobs:
   push_to_registry:
