@@ -1,11 +1,11 @@
 FROM node:alpine AS builder
 
-ENV NODE_ENV production
 RUN apk add --update --no-cache g++ make python2
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 
+ENV NODE_ENV production
 ENV PATH="./node_modules/.bin:$PATH"
 
 COPY . ./
