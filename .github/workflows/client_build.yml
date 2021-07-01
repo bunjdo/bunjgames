@@ -30,4 +30,4 @@ jobs:
         with:
           context: client/
           push: true
-          tags: bunjgames/client:latest
+          tags: bunjgames:client-latest
