@@ -30,4 +30,4 @@ jobs:
         with:
           context: client/
           push: true
-          tags: bunjlabs/bunjgames-client:latest
+          tags: ghcr.io/bunjgames-client:latest
