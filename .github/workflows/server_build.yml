@@ -1,39 +1,32 @@
-name: Build server
+name: Build client
 
 on:
   push:
     branches: [ master ]
     paths:
       - 'server/**'
+      - '.github/workflows/server_build.yml'
 
 jobs:
-  build:
-
+  push_to_registry:
+    name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
-
+    permissions:
+      packages: write
+      contents: read
     steps:
-    - uses: actions/checkout@v1
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Copy repository contents via scp
-      uses: appleboy/scp-action@master
-      env:
-        HOST: ${{ secrets.HOST }}
-        USERNAME: ${{ secrets.USERNAME }}
-        PORT: ${{ secrets.PORT }}
-        KEY: ${{ secrets.SSHKEY }}
-      with:
-        source: "."
-        target: "/srv/bunjgames"
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Executing remote command
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        USERNAME: ${{ secrets.USERNAME }}
-        PORT: ${{ secrets.PORT }}
-        KEY: ${{ secrets.SSHKEY }}
-        script: |
-          chown -R www-data:www-data /srv/bunjgames/server/media/*
-          python /srv/bunjgames/server/manage.py migrate
-          systemctl restart bunjgames
-          systemctl status bunjgames
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: server/
+          push: true
+          tags: bunjdo/bunjgames-server:latest
