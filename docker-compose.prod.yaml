@@ -1,15 +1,15 @@
 version: '3.0'
 services:
   client:
-    build:
-      context: client/
+    image: &client bunjdo/bunjgames-client:latest
     ports:
       - 8080:80
+    restart: always
   server:
-    build:
-      context: server/
-    image: &server bunjgames-server:last
+    image: &server bunjdo/bunjgames-server:latest
     command: daphne -b 0.0.0.0 -p 80 server.asgi:application
+    volumes:
+      - /srv/bunjgames/media:/app/media
     environment: &server_environment
       - DEBUG=false
       - DATABASE_HOST=db
@@ -17,12 +17,14 @@ services:
       - 8000:80
     depends_on:
       - db
+    restart: always
   cron:
     image: *server
     command: cron -f
     environment: *server_environment
     depends_on:
       - db
+    restart: always
   db:
     image: postgres
     volumes:
@@ -30,6 +32,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=bunjgames
+    restart: always
 
 volumes:
   bunjgames-db-data:
