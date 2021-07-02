@@ -72,6 +72,14 @@
   }
 }
 
+.qr {
+  height: 65vh !important;
+  width: 65vh !important;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .block {
   font-size: 60px;
   color: $baseTextColor;

@@ -2,6 +2,12 @@ import React, {useState, useEffect, useRef} from "react";
 import styles from "./Auth.scss";
 import {Loading, Toast} from "./Essentials.jsx";
 import {toast} from "react-toastify";
+import {useLocation} from "react-router-dom";
+
+
+const useQuery= () => {
+    return new URLSearchParams(useLocation().search);
+}
 
 const GameAuth = ({children}) => (
     <div className={styles.auth}>
@@ -78,7 +84,8 @@ const GameOpenForm = ({api, setConnected}) => {
 
 const RegisterPlayerForm = ({api, setConnected}) => {
     const [loading, setLoading] = useState(false);
-    const [token, setToken] = useState("");
+    const query = useQuery();
+    const [token, setToken] = useState(query.get('token') || "");
     const [name, setName] = useState("");
 
     const onSubmit = () => {

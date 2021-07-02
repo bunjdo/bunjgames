@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Loading, useGame, useAuth, useTimer, HowlWrapper} from "common/Essentials";
 import {AdminAuth} from "common/Auth";
-import {Content, GameView, TextContent, BlockContent, ExitButton} from "common/View";
+import {Content, GameView, TextContent, BlockContent, ExitButton, QRCodeContent} from "common/View";
 import {useHistory} from "react-router-dom";
 
 const Music = {
@@ -53,7 +53,9 @@ const FinalQuestions = ({game}) => {
 const useStateContent = (game) => {
     switch (game.state) {
         case "waiting_for_players":
-            return <TextContent>{game.token}</TextContent>;
+            return <QRCodeContent value={'https://games.bunj.app/weakest/client?token=' + game.token}>
+                {game.token}
+            </QRCodeContent>;
         case "round":
             return <TextContent>Round {game.round}</TextContent>;
         case "questions":

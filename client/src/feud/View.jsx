@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Loading, useGame, useAuth, useTimer, HowlWrapper} from "common/Essentials";
 import {AdminAuth} from "common/Auth";
-import {Content, ExitButton, GameView, TextContent} from "common/View";
+import {Content, ExitButton, GameView, TextContent, QRCodeContent} from "common/View";
 import {FinalQuestions, Question} from "feud/Question";
 import styles from "feud/View.scss";
 import {useHistory} from "react-router-dom";
@@ -50,7 +50,9 @@ const useStateContent = (game) => {
     const answerer = game.answerer && game.teams.find(t => t.id === game.answerer);
     switch (game.state) {
         case "waiting_for_teams":
-            return <TextContent>{game.token}</TextContent>;
+            return <QRCodeContent value={'https://games.bunj.app/feud/client?token=' + game.token}>
+                {game.token}
+            </QRCodeContent>;
         case "round":
             return <TextContent>Round {game.round}</TextContent>;
         case "button":

@@ -5,7 +5,7 @@ import {AdminAuth} from "common/Auth";
 
 import {ThemesList, ThemesGrid, QuestionsGrid} from "jeopardy/Themes";
 import {getRoundName, getTypeName} from "jeopardy/Common";
-import {Content, ExitButton, GameView, TextContent} from "common/View";
+import {Content, ExitButton, GameView, TextContent, QRCodeContent} from "common/View";
 import styles from "jeopardy/View.scss";
 import {useHistory} from "react-router-dom";
 
@@ -49,7 +49,9 @@ const useStateContent = (game) => {
 
     switch (game.state) {
         case "waiting_for_players":
-            return <TextContent>{game.token}</TextContent>;
+            return <QRCodeContent value={'https://games.bunj.app/jeopardy/client?token=' + game.token}>
+                {game.token}
+            </QRCodeContent>;
         case "themes_all":
             return <ThemesGrid game={game}/>;
         case "round":

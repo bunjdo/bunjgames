@@ -1,4 +1,5 @@
 import React from "react";
+import QRCode from "qrcode.react";
 import styles from "common/View.scss";
 import {Toast} from "common/Essentials";
 
@@ -15,6 +16,13 @@ const ExitButton = ({onClick}) => (
 const TextContent = ({className, children}) => (
     <div className={css(styles.text, className)}>
         <p>{children}</p>
+    </div>
+);
+
+const QRCodeContent = ({className, children, value}) => (
+    <div className={css(styles.text, className)}>
+        <p>{children}</p>
+        <QRCode className={styles.qr} size={2000} includeMargin={true} bgColor={'#fff'} value={value} />
     </div>
 );
 
@@ -40,6 +48,7 @@ const GameView = ({children}) => (
 export {
     ExitButton,
     TextContent,
+    QRCodeContent,
     BlockContent,
     Content,
     GameView,
