@@ -72,5 +72,6 @@ jobs:
             docker-compose pull
             docker-compose run server python manage.py migrate
             docker-compose up --detach --build server
+            docker-compose up --detach --build cron
             docker-compose up --detach --build client
             docker image prune -f
