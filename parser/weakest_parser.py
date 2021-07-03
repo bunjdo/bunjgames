@@ -88,84 +88,55 @@ def parse_100k1_biniko_com():
     return questions
 
 
-def create_games_from_json(path):
-    def normalize_answers(_answers):
-        result = []
-        for i, answer in enumerate(_answers):
-            n = len(_answers)
-            multiplier = 100 / ((n * (n + 1)) / 2)
-            val = int((len(_answers) - i) * multiplier)
-            if isinstance(answer, list):
-                result.append((answer[0], val))
-            else:
-                result.append((answer, val))
-        return result
-
-    def process_game_pack(_data: dict):
-        _data_to_remove = {}
-
+def create_games_from_file(path, divider='|'):
+    def process_game_pack(_data: list):
         game_xml = etree.Element('game')
         questions_xml = etree.Element('questions')
         final_questions_xml = etree.Element('final_questions')
 
-        for question, answers in _data.items():
-            norm_answers = normalize_answers(answers)
+        for line in _data:
             question_xml = etree.Element('question')
-            text_xml = etree.Element('text')
-            text_xml.text = question
-            question_xml.append(text_xml)
-            for answer in norm_answers:
-                answer_xml = etree.Element('answer')
-                text_xml = etree.Element('text')
-                text_xml.text = answer[0]
-                answer_xml.append(text_xml)
-                value_xml = etree.Element('value')
-                value_xml.text = str(answer[1])
-                answer_xml.append(value_xml)
-                question_xml.append(answer_xml)
+            q, a = line.split(divider)
+            question_question_xml = etree.Element('question')
+            question_question_xml.text = q
+            question_xml.append(question_question_xml)
+            answer_xml = etree.Element('answer')
+            answer_xml.text = a
+            question_xml.append(answer_xml)
 
-            answers_for_print = [f'{answer[0]}: {answer[1]}' for answer in norm_answers]
-            print(f'{question}: {", ".join(answers_for_print)}')
-            print('y - Accept\nd - Decline and remove\nany other key - Decline but keep\nEnter command:')
+            print(f'{q}: {a}')
+            print('y - Accept\nd - Decline')
             char = getch()
             if char == 'y':
-                if len(questions_xml) < 4:
+                if len(questions_xml) < 200:
                     questions_xml.append(question_xml)
                 else:
                     final_questions_xml.append(question_xml)
-                _data_to_remove[question] = _data[question]
             elif char == 'd':
-                _data_to_remove[question] = _data[question]
-            else:
-                pass
+                continue
 
-            if len(questions_xml) >= 4 and len(final_questions_xml) >= 5:
+            if len(questions_xml) >= 200 and len(final_questions_xml) >= 16:
+                score_multiplier_xml = etree.Element('score_multiplier')
+                score_multiplier_xml.text = '1'
+
                 filename = datetime.datetime.now().strftime("%d.%m.%Y_%H:%M:%S")
                 game_xml.append(questions_xml)
                 game_xml.append(final_questions_xml)
+                game_xml.append(score_multiplier_xml)
                 content = etree.tostring(game_xml, pretty_print=True)
                 print(f'\n\n{content}\n{filename}\n\n')
-                f = open(f'packs/{filename}.feud', 'w')
+                f = open(f'packs/{filename}.weakest', 'w')
                 f.write(content.decode("utf-8"))
                 f.close()
-                all(map(_data.pop, _data_to_remove))
-                return
 
-    with open(path) as json_file:
-        data = json.load(json_file)
-        while data:
-            process_game_pack(data)
-        json.dump(data, path, ensure_ascii=False)
-
-
-def parse():
-    questions = parse_100k1_biniko_com()
-    with open('parsed_data/100k1_biniko_com.json', 'w', encoding="utf-8") as file:
-        json.dump(questions, file, ensure_ascii=False)
+    with open(path, 'r') as file:
+        lines = file.readlines()
+        process_game_pack(lines)
+        json.dump(lines, path, ensure_ascii=False)
 
 
 def process():
-    create_games_from_json('parsed_data/100k1_biniko_com.json')
+    create_games_from_file('parsed_data/baza-voprosov-dlya-viktoriny.txt', '|')
 
 
 if __name__ == '__main__':
