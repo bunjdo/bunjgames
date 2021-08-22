@@ -15,7 +15,7 @@ content.xml structure:
             <name>1</name>  <!-- string -->
             <description>question</description>  <!-- string -->
             <type>standard</type>  <!-- standard, blitz, superblitz -->
-            <questions> <!-- 1 for standart, 3 for blitz and superblitz -->
+            <questions> <!-- 1 for standard, 3 for blitz and superblitz -->
                 <question>
                     <description>question</description>  <!-- string -->
                     <text></text>  <!-- string, optional -->
@@ -30,7 +30,7 @@ content.xml structure:
                         <video></video>  <!-- string, optional -->
                     </answer>
                 </question>
-                ...  <!-- 1 item for standart queston, 3 for blitz and superblitz -->
+                ...  <!-- 1 item for standard question, 3 for blitz and superblitz -->
             </questions>
         </item>
    </items>

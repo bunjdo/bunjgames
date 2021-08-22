@@ -11,6 +11,14 @@ body {
 }
 
 .body {
+  height: 100%;
+
+  overflow-y: scroll;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
   background-color: $baseBackground;
   color: $baseTextColor;
 
@@ -19,10 +27,6 @@ body {
     padding: 16px;
     display: flex;
     justify-content: space-between;
-
-    .title {
-      font-size: 32px;
-    }
 
     .textRight {
       text-align: right;
@@ -37,11 +41,27 @@ body {
     padding: 16px;
   }
 
+  .title {
+      font-size: 24px;
+  }
+
   .subtitle {
-    font-size: 28px;
+    font-size: 22px;
   }
 
   .alignRight {
     right: 0;
+  }
+
+  .marginBottom {
+    margin-bottom: 10px;
+  }
+
+  .tab {
+    padding-left: 40px;
+  }
+
+  .preWrap {
+    white-space: pre-wrap;
   }
 }

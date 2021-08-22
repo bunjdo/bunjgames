@@ -4,7 +4,7 @@ import {Howler} from 'howler';
 import styles from './App.scss';
 import { BrowserRouter, withRouter } from 'react-router-dom'
 import { Switch, Route } from "react-router";
-import { MainPage, AdminPage } from "info/InfoPage";
+import {MainPage, AdminPage, AboutPage} from "info/InfoPage";
 import WhirligigAdmin from "./whirligig/Admin.jsx";
 import WhirligigView from "./whirligig/View.jsx";
 import WhirligigApi from "./whirligig/WhirligigApi.js";
@@ -53,6 +53,7 @@ const App = () => {
         <Switch>
             <Route exact path="/" component={MainPage}/>
             <Route exact path="/admin" component={AdminPage}/>
+            <Route exact path="/about" component={AboutPage}/>
 
             <Route exact path="/whirligig/admin" component={WhirligigAdmin}/>
             <Route exact path="/whirligig/view" component={WhirligigView}/>

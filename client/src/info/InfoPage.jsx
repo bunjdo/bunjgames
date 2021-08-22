@@ -9,6 +9,9 @@ const MainPage = () => {
             <div className={css(styles.textRight, styles.title)}><Link to={'/admin'}>Admin panel</Link></div>
         </div>
         <div className={styles.category}>
+            <div className={styles.subtitle}><Link to={'/about'}>About page</Link></div>
+        </div>
+        <div className={styles.category}>
             <div className={styles.subtitle}>Whirligig</div>
             <div>Throughout the game, a team of six (recommended) experts attempts to answer questions sent in by viewers.
                 For each question, the time limit is one minute. The questions require a combination of skills such as logical thinking,
@@ -75,7 +78,146 @@ const AdminPage = () => {
     </div>
 }
 
+
+const AboutPage = () => {
+    return <div className={styles.body}>
+        <div className={styles.header}>
+            <div className={styles.title}>Bunjgames</div>
+            <div className={css(styles.textRight, styles.title)}><Link to={'/'}>Home</Link></div>
+        </div>
+
+        <div className={styles.category}>
+            <div className={styles.title}>How to play:</div>
+            <div className={styles.marginBottom}/>
+
+            <div>You should create the game using one of the selected game files or by creating your own game file.</div>
+            <div className={styles.marginBottom}/>
+            <div>Create new game using admin panel (you will be using it for the rest of the game) and then open it in
+                view panel with game token (top left of the Admin panel).
+                Preferably this should be a big enough screen for all of the game participants to view.
+                I'm personally use my laptop for admin panel and cast View panel to my TV with chromecast in another tab.</div>
+            <div className={styles.marginBottom}/>
+            <div>Most of the games (all of them except whirligig for now) require their players to join it using game client.
+                They can use game token or QR code available at first screen of View panel. Player name should be unique.
+                If player exits the game by accident, he can reenter the game using his name and game token at any time.</div>
+        </div>
+
+        <div className={styles.category}>
+            <div className={styles.title}>Where to find game packs:</div>
+            <div className={styles.marginBottom}/>
+
+            <div>
+                <a href={'https://drive.google.com/drive/folders/1a4MoR8FusJCEePqR1SOxratkvchsgtRX?usp=sharing'}>
+                    Game packs by bunjdo
+                </a> (russian)
+            </div>
+            <div>You can also find game pack templates here. You can create your game using template an zip it.</div>
+            <div className={styles.marginBottom}/>
+            <div className={styles.subtitle}>Jeopardy:</div>
+            <div className={styles.marginBottom}/>
+            <div>
+                <a href={'https://vladimirkhil.com/si/storage'}>
+                    Official Jeopardy game packs
+                </a> (russian)
+            </div>
+            <div>
+                <a href={'https://vk.com/topic-135725718_34975471'}>
+                    Unofficial Jeopardy game packs
+                </a> (russian)
+            </div>
+        </div>
+
+        <div className={styles.category}>
+            <div className={styles.title}>Whirligig game file specification:</div>
+            <div className={styles.marginBottom}/>
+
+            <div className={styles.subtitle}>Zip archive file with structure:</div>
+            <div className={styles.tab}>content.xml</div>
+            <div className={styles.tab}>assets/  - images, audio and video folder</div>
+            <div className={styles.marginBottom}/>
+
+            <div className={styles.subtitle}>content.xml structure:</div>
+            <div className={styles.marginBottom}/>
+            <div className={css(styles.tab, styles.preWrap)}>{'<?xml version="1.0" encoding="utf-8"?>\n' +
+            '<!DOCTYPE game>\n' +
+            '<game>\n' +
+            '    <items>  <!-- 13 items -->\n' +
+            '        <item>\n' +
+            '            <number>1</number>  <!-- integer -->\n' +
+            '            <name>1</name>  <!-- string -->\n' +
+            '            <description>question</description>  <!-- string -->\n' +
+            '            <type>standard</type>  <!-- standard, blitz, superblitz -->\n' +
+            '            <questions> <!-- 1 for standard, 3 for blitz and superblitz -->\n' +
+            '                <question>\n' +
+            '                    <description>question</description>  <!-- string -->\n' +
+            '                    <text></text>  <!-- string, optional -->\n' +
+            '                    <image></image>  <!-- string, optional -->\n' +
+            '                    <audio></audio>  <!-- string, optional -->\n' +
+            '                    <video></video>  <!-- string, optional -->\n' +
+            '                    <answer>\n' +
+            '                        <description>answer</description>  <!-- string -->\n' +
+            '                        <text></text>  <!-- string, optional -->\n' +
+            '                        <image></image>  <!-- string, optional -->\n' +
+            '                        <audio></audio>  <!-- string, optional -->\n' +
+            '                        <video></video>  <!-- string, optional -->\n' +
+            '                    </answer>\n' +
+            '                </question>\n' +
+            '                ...  <!-- 1 item for standard question, 3 for blitz and superblitz -->\n' +
+            '            </questions>\n' +
+            '        </item>\n' +
+            '   </items>\n' +
+            '   ...\n' +
+            '</game>'}</div>
+        </div>
+
+        <div className={styles.category}>
+            <div className={styles.title}>Jeopardy game file specification:</div>
+            <div className={styles.marginBottom}/>
+
+            <div>
+                <a href={'https://vladimirkhil.com/si/siquester'}>Jeopardy game packs editor (russian only)</a>
+            </div>
+            <div className={styles.marginBottom}/>
+            <div>Coming soon...</div>
+        </div>
+
+        <div className={styles.category}>
+            <div className={styles.title}>The Weakest game file specification:</div>
+            <div className={styles.marginBottom}/>
+
+            <div>Coming soon...</div>
+        </div>
+
+        <div className={styles.category}>
+            <div className={styles.title}>Friends Feud game file specification:</div>
+            <div className={styles.marginBottom}/>
+
+            <div>Coming soon...</div>
+        </div>
+
+        <div className={styles.category}>
+            <div className={styles.title}>Friends Feud game file specification:</div>
+            <div className={styles.marginBottom}/>
+
+            <div>Coming soon...</div>
+        </div>
+
+        <div className={styles.category}>
+            <div className={styles.title}>Assets specification:</div>
+            <div className={styles.marginBottom}/>
+            <div>You can place your assets anywhere at assets folder.</div>
+            <div>Nested folders (assets/image, assets/audio, etc.) are optional.</div>
+            <div>Leading slash (/) is mandatory.</div>
+            <div>Assets encoding is not limited, but your target browser must be able to use it.</div>
+            <div>Example:</div>
+            <div className={styles.tab}>/image/1a.png</div>
+            <div className={styles.tab}>/audio/music.mp3</div>
+        </div>
+    </div>
+}
+
 export {
     MainPage,
-    AdminPage
+    AdminPage,
+    AboutPage
 }
