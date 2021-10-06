@@ -68,6 +68,6 @@ jobs:
           USERNAME: ${{ secrets.SSH_USERNAME }}
           KEY: ${{ secrets.SSH_KEY }}
           script: |
-            cd /srv/bunjgames
-            docker stack deploy bunjgames -c ./docker-compose.yaml
-            docker image prune -f
+            docker stack up bunjgames -c /srv/bunjgames/docker-compose.yaml
+            docker rmi $(docker images -q) -f
+            docker system prune -f
