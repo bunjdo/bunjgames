@@ -9,7 +9,6 @@ import {
     ButtonLink,
     VerticalList,
     ListItem,
-    useTimer,
     OvalButton,
     calcStateName
 } from "common/Essentials"
@@ -18,31 +17,11 @@ import {AdminAuth} from "common/Auth";
 
 import styles from "feud/Admin.scss";
 import {FinalQuestions, Question} from "feud/Question";
+import {FaVolumeMute} from "react-icons/all";
 
-
-const states = [
-    'waiting_for_teams',
-    'intro',
-    'round',
-    'button',
-    'answers',
-    'answers_reveal',
-    'final',
-    'final_questions',
-    'final_questions_reveal',
-    'end'
-];
 
 const getStateName = (state) => {
     return calcStateName(state);
-}
-
-const Timer = () => {
-    const time = useTimer(FEUD_API, () => FEUD_API.next_state("questions"));
-    const date = new Date(0);
-    date.setSeconds(time);
-    const timeStr = date.toISOString().substr(14, 5);
-    return <TextContent>{timeStr}</TextContent>
 }
 
 const Teams = ({game}) => {
@@ -123,7 +102,7 @@ const gameScore = (game) => {
 }
 
 const FeudAdmin = () => {
-    const game = useGame(FEUD_API, (game) => {}, (message) => {});
+    const game = useGame(FEUD_API, (_) => {}, (_) => {});
     const [connected, setConnected] = useAuth(FEUD_API);
     const history = useHistory();
 
@@ -138,7 +117,7 @@ const FeudAdmin = () => {
 
     return <GameAdmin>
         <Header gameName={"Friends Feud"} token={game.token} stateName={getStateName(game.state)}>
-            <OvalButton onClick={onSoundStop}><i className="fas fa-volume-mute"/></OvalButton>
+            <OvalButton onClick={onSoundStop}><FaVolumeMute /></OvalButton>
             <ButtonLink to={"/admin"}>Home</ButtonLink>
             <ButtonLink to={"/feud/view"}>View</ButtonLink>
             <Button onClick={onLogout}>Logout</Button>

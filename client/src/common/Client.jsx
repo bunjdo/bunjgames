@@ -1,6 +1,7 @@
 import React from "react";
 import {Toast} from "common/Essentials";
 import styles from "common/Client.scss";
+import {FaTimesCircle} from "react-icons/all";
 
 const ExitButton = ({onClick}) => (
     <a className={styles.exit} onClick={() => {
@@ -9,7 +10,7 @@ const ExitButton = ({onClick}) => (
         } else {
             e.preventDefault();
         }
-    }}><i className="fas fa-times-circle"/></a>
+    }}><FaTimesCircle /></a>
 )
 
 const Header = ({children}) => (

@@ -17,13 +17,14 @@ import {BlockContent, Content, Footer, FooterItem, GameAdmin, Header, TextConten
 import {ThemesList, ThemesGrid, QuestionsGrid} from "jeopardy/Themes";
 import {getStatusName, getTypeName, getRoundName} from "jeopardy/Common";
 import styles from "jeopardy/Admin.scss";
+import {FaVolumeMute} from "react-icons/all";
 
 
 const QuestionEvent = ({question}) => {
     const {
         type, theme, custom_theme, value
     } = question;
-    let themeDiv = null;
+    let themeDiv;
     if (custom_theme) {
         themeDiv = <div>Custom theme: {custom_theme}</div>;
     } else {
@@ -216,7 +217,7 @@ const JeopardyAdmin = () => {
 
     return <GameAdmin>
         <Header gameName={"Jeopardy"} token={game.token} stateName={getStatusName(game.state)}>
-            <OvalButton onClick={onSoundStop}><i className="fas fa-volume-mute"/></OvalButton>
+            <OvalButton onClick={onSoundStop}><FaVolumeMute /></OvalButton>
             <ButtonLink to={"/admin"}>Home</ButtonLink>
             <ButtonLink to={"/jeopardy/view"}>View</ButtonLink>
             <Button onClick={onLogout}>Logout</Button>

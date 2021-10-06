@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
 
 import {
@@ -15,6 +15,7 @@ import {AdminAuth} from "common/Auth";
 import {BlockContent, Content, Footer, FooterItem, GameAdmin, Header, TextContent} from "common/Admin";
 
 import styles from "whirligig/Admin.scss";
+import {FaCheckSquare, FaMinus, FaPlus, FaSquare, FaVolumeMute} from "react-icons/all";
 
 
 const getStatusName = (status) => {
@@ -45,8 +46,8 @@ const getStatusName = (status) => {
 const ItemQuestion = ({question, single}) => {
     const {number, is_processed, description, answer_description} = question;
     const checkbox = (is_processed)
-        ? <i className="fas fa-check-square"/>
-        : <i className="fas fa-square"/>
+        ? <FaCheckSquare />
+        : <FaSquare />
 
     return <div className={styles.question}>
         {single || <div>{number}: {checkbox}</div>}
@@ -65,11 +66,11 @@ const ItemQuestions = ({questions}) => (
 
 const Item = ({item}) => {
     let [isSelected, select] = useState(false);
-    const {name, description, type, is_processed} = item;
+    const {name, description, is_processed} = item;
 
     const checkbox = (is_processed)
-        ? <i className="fas fa-check-square"/>
-        : <i className="fas fa-square"/>
+        ? <FaCheckSquare />
+        : <FaSquare />
 
     return <div className={styles.item}>
         <div className={styles.short} onClick={() => select(!isSelected)}>
@@ -113,28 +114,24 @@ const ScoreControl = ({game}) => {
         <div className={styles.control}>
             <div>Connoisseurs</div>
             <div>
-                <Button
-                     onClick={() => updateScore(game.connoisseurs_score - 1, game.viewers_score)}>
-                    <i className="fas fa-minus"/>
+                <Button onClick={() => updateScore(game.connoisseurs_score - 1, game.viewers_score)}>
+                    <FaMinus />
                 </Button>
                 {game.connoisseurs_score}
-                <Button
-                     onClick={() => updateScore(game.connoisseurs_score + 1, game.viewers_score)}>
-                    <i className="fas fa-plus"/>
+                <Button onClick={() => updateScore(game.connoisseurs_score + 1, game.viewers_score)}>
+                    <FaPlus />
                 </Button>
             </div>
         </div>
         <div className={styles.control}>
             <div>Viewers</div>
             <div>
-                <Button
-                     onClick={() => updateScore(game.connoisseurs_score, game.viewers_score - 1)}>
-                    <i className="fas fa-minus"/>
+                <Button onClick={() => updateScore(game.connoisseurs_score, game.viewers_score - 1)}>
+                    <FaMinus />
                 </Button>
                 {game.viewers_score}
-                <Button
-                     onClick={() => updateScore(game.connoisseurs_score, game.viewers_score + 1)}>
-                    <i className="fas fa-plus"/>
+                <Button onClick={() => updateScore(game.connoisseurs_score, game.viewers_score + 1)}>
+                    <FaPlus />
                 </Button>
             </div>
         </div>
@@ -217,7 +214,7 @@ const WhirligigAdmin = () => {
 
     return <GameAdmin>
         <Header gameName={"Whirligig"} token={game.token} stateName={getStatusName(game.state)}>
-            <OvalButton onClick={onSoundStop}><i className="fas fa-volume-mute"/></OvalButton>
+            <OvalButton onClick={onSoundStop}><FaVolumeMute /></OvalButton>
             <ButtonLink to={"/admin"}>Home</ButtonLink>
             <ButtonLink to={"/whirligig/view"}>View</ButtonLink>
             <Button onClick={onLogout}>Logout</Button>

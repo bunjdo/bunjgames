@@ -2,6 +2,7 @@ import React from "react";
 import QRCode from "qrcode.react";
 import styles from "common/View.scss";
 import {Toast} from "common/Essentials";
+import {FaTimesCircle} from "react-icons/all";
 
 const ExitButton = ({onClick}) => (
     <a className={styles.exit} onClick={() => {
@@ -10,7 +11,7 @@ const ExitButton = ({onClick}) => (
         } else {
             e.preventDefault();
         }
-    }}><i className="fas fa-times-circle"/></a>
+    }}><FaTimesCircle /></a>
 )
 
 const TextContent = ({className, children}) => (

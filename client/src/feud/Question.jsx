@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import styles from "./Question.scss";
+import {FaTimes} from "react-icons/all";
 
 const Question = ({game, showHiddenAnswers, className, onSelect}) => {
     const answerer = game.answerer && game.teams.find(t => t.id === game.answerer);
@@ -39,7 +40,7 @@ const Question = ({game, showHiddenAnswers, className, onSelect}) => {
                         styles.cell, styles.strike
                     )}
                 >
-                    <i className="fas fa-times"/>
+                    <FaTimes />
                 </div>
             );
         } else {

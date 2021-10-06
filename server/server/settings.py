@@ -131,4 +131,6 @@ MEDIA_ROOT_WEAKEST = os.path.join(BASE_DIR, 'media', 'weakest')
 MEDIA_ROOT_FEUD = os.path.join(BASE_DIR, 'media', 'feud')
 MEDIA_URL = '/media/'
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 JEOPARDY_IS_POST_EVENT_REQUIRED = False

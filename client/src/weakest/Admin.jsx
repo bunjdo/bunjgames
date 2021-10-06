@@ -17,6 +17,7 @@ import {BlockContent, Content, Footer, FooterItem, GameAdmin, Header, TextConten
 import {AdminAuth} from "common/Auth";
 
 import styles from "weakest/Admin.scss";
+import {FaVolumeMute} from "react-icons/all";
 
 
 const getStatusName = (status) => {
@@ -162,7 +163,7 @@ const useControl = (game) => {
 };
 
 const WeakestAdmin = () => {
-    const game = useGame(WEAKEST_API, (game) => {}, (message) => {});
+    const game = useGame(WEAKEST_API, (_) => {}, (_) => {});
     const [connected, setConnected] = useAuth(WEAKEST_API);
     const history = useHistory();
 
@@ -177,7 +178,7 @@ const WeakestAdmin = () => {
 
     return <GameAdmin>
         <Header gameName={"The Weakest"} token={game.token} stateName={getStatusName(game.state)}>
-            <OvalButton onClick={onSoundStop}><i className="fas fa-volume-mute"/></OvalButton>
+            <OvalButton onClick={onSoundStop}><FaVolumeMute /></OvalButton>
             <ButtonLink to={"/admin"}>Home</ButtonLink>
             <ButtonLink to={"/weakest/view"}>View</ButtonLink>
             <Button onClick={onLogout}>Logout</Button>

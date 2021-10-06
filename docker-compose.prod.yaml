@@ -2,6 +2,9 @@ version: '3.0'
 services:
   client:
     image: &client bunjdo/bunjgames-client:latest
+    environment:
+      - REACT_APP_API_ENDPOINT=https://api.games.bunj.app/
+      - REACT_APP_WS_ENDPOINT=wss://api.games.bunj.app/
     ports:
       - 8080:80
     restart: always
@@ -25,8 +28,18 @@ services:
     depends_on:
       - db
     restart: always
+  migrations:
+    image: *server
+    command: python manage.py migrate
+    environment: *server_environment
+    depends_on:
+      - db
+    restart: 'no'
+    deploy:
+      restart_policy:
+        condition: none
   db:
-    image: postgres
+    image: postgres:13.0
     volumes:
       - bunjgames-db-data:/var/lib/postgresql/data
     environment:
