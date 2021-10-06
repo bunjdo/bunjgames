@@ -69,9 +69,5 @@ jobs:
           KEY: ${{ secrets.SSH_KEY }}
           script: |
             cd /srv/bunjgames
-            docker-compose pull
-            docker-compose run server python manage.py migrate
-            docker-compose up --detach --build server
-            docker-compose up --detach --build cron
-            docker-compose up --detach --build client
+            docker stack deploy bunjgames -c ./docker-compose.yaml
             docker image prune -f
