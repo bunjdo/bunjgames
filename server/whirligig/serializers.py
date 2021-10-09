@@ -55,14 +55,16 @@ class GameSerializer(serializers.Serializer):
 
     def get_cur_item(self, model: Game):
         item = model.items.get(number=model.cur_item) \
-            if model.state in (model.STATE_QUESTION_START, model.STATE_QUESTION_DISCUSSION,
+            if model.state in (model.STATE_QUESTION_WHIRLIGIG,
+                               model.STATE_QUESTION_START, model.STATE_QUESTION_DISCUSSION,
                                model.STATE_ANSWER, model.STATE_RIGHT_ANSWER) \
             else None
         return GameItemSerializer().to_representation(item) if item else None
 
     def get_cur_question(self, model: Game):
         question = model.items.get(number=model.cur_item).questions.get(number=model.cur_question) \
-            if model.state in (model.STATE_QUESTION_START, model.STATE_QUESTION_DISCUSSION,
+            if model.state in (model.STATE_QUESTION_WHIRLIGIG,
+                               model.STATE_QUESTION_START, model.STATE_QUESTION_DISCUSSION,
                                model.STATE_ANSWER, model.STATE_RIGHT_ANSWER) \
             else None
         return QuestionSerializer().to_representation(question) if question else None

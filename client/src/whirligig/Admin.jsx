@@ -145,6 +145,17 @@ const useStateContent = (game) => {
         return <TextContent>{getStatusName(game.state)}</TextContent>;
     }
 
+    if (game.state === 'question_whirligig') {
+        return <BlockContent>
+            <div>{getStatusName(game.state)}</div>
+            <div>
+                <div>Name: {cur_item.name}</div>
+                {cur_item.description && <div>Description: {cur_item.description}</div>}
+                <div>Type: {cur_item.type}</div>
+            </div>
+        </BlockContent>;
+    }
+
     return <BlockContent>
         <div>
             <div>Name: {cur_item.name}</div>
