@@ -27,6 +27,14 @@ class QuestionSerializer(serializers.Serializer):
         model = Question
 
 
+class QuestionInfoSerializer(serializers.Serializer):
+    is_correct = serializers.BooleanField()
+    is_processed = serializers.BooleanField()
+
+    class Meta:
+        model = Question
+
+
 class GameSerializer(serializers.Serializer):
     token = serializers.CharField()
     expired = serializers.DateTimeField()
@@ -40,6 +48,7 @@ class GameSerializer(serializers.Serializer):
     answerer = SerializerMethodField()
     weakest = SerializerMethodField()
     strongest = SerializerMethodField()
+    final_questions = SerializerMethodField()
     timer = serializers.IntegerField()
     players = PlayerSerializer(many=True)
 
@@ -51,6 +60,10 @@ class GameSerializer(serializers.Serializer):
 
     def get_strongest(self, model: Game):
         return model.strongest.id if model.strongest else None
+
+    def get_final_questions(self, model: Game):
+        return QuestionInfoSerializer(model.questions.filter(is_final=True), many=True).data \
+            if model.state in (model.STATE_FINAL_QUESTIONS, model) else None
 
     class Meta:
         model = Game

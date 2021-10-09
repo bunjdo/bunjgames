@@ -3,7 +3,7 @@ import time
 from xml.etree import ElementTree
 
 from django.db import models, transaction
-from django.db.models import Count, Q, F, Subquery, OuterRef
+from django.db.models import Count, Subquery, OuterRef
 from django.utils import timezone
 
 from common.utils import generate_token, BadFormatException, BadStateException, NothingToDoException
@@ -165,6 +165,8 @@ class Game(models.Model):
 
         if len(final_questions_xml.findall('question')) < 10:
             raise BadFormatException('Number of final questions must be 10 or more')
+        if len(final_questions_xml.findall('question')) % 2 != 0:
+            raise BadFormatException('Number of final questions must be even')
         for question_number, question_xml in enumerate(final_questions_xml.findall('question')):
             question = Question.objects.create(
                 question=question_xml.find('question').text,
@@ -312,7 +314,6 @@ class Question(models.Model):
     question = models.TextField()
     answer = models.TextField()
     is_final = models.BooleanField()
-    is_answered_correctly = models.BooleanField(null=True)
     is_processed = models.BooleanField(default=False)
     is_correct = models.BooleanField(null=True)
 

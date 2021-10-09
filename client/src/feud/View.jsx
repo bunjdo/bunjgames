@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Loading, useGame, useAuth, useTimer, HowlWrapper} from "common/Essentials";
+import {Loading, useGame, useAuth, HowlWrapper} from "common/Essentials";
 import {AdminAuth} from "common/Auth";
 import {Content, ExitButton, GameView, TextContent, QRCodeContent} from "common/View";
 import {FinalQuestions, Question} from "feud/Question";
@@ -38,14 +38,6 @@ const changeMusic = (old, next) => {
     }
 }
 
-const Timer = () => {
-    const time = useTimer(FEUD_API);
-    const date = new Date(0);
-    date.setSeconds(time);
-    const timeStr = date.toISOString().substr(14, 5);
-    return <TextContent>{timeStr}</TextContent>
-}
-
 const useStateContent = (game) => {
     const answerer = game.answerer && game.teams.find(t => t.id === game.answerer);
     switch (game.state) {
@@ -67,7 +59,7 @@ const useStateContent = (game) => {
         case "final_questions_reveal":
             return <FinalQuestions game={game} className={styles.question}/>;
         case "end":
-            return <TextContent>{answerer.score > 200 ? answerer.score : 0}</TextContent>;
+            return <TextContent>{answerer.score > 200 ? "Victory" : "Defeat"}</TextContent>;
         default:
             return <TextContent>Friends Feud</TextContent>
     }

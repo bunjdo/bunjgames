@@ -15,6 +15,7 @@ import {
 } from "common/Essentials"
 import {BlockContent, Content, Footer, FooterItem, GameAdmin, Header, TextContent} from "common/Admin";
 import {AdminAuth} from "common/Auth";
+import FinalQuestions from "weakest/FinalQuestions";
 
 import styles from "weakest/Admin.scss";
 import {FaVolumeMute} from "react-icons/all";
@@ -48,9 +49,7 @@ const Question = ({game}) => {
     const {question, answer} = game.question;
 
     return <BlockContent>
-        {game.state === "final_questions" && game.players.filter(player => !player.is_weak).map(player =>
-            <div key={player.id}>{player.name} : {player.right_answers}</div>
-        )}
+        {game.state === "final_questions" && <FinalQuestions game={game} />}
         {game.state === "questions" && <Timer/>}
         <div>{question}</div>
         <div>{answer}</div>

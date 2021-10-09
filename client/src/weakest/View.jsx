@@ -3,6 +3,7 @@ import {Loading, useGame, useAuth, useTimer, HowlWrapper} from "common/Essential
 import {AdminAuth} from "common/Auth";
 import {Content, GameView, TextContent, BlockContent, ExitButton, QRCodeContent} from "common/View";
 import {useHistory} from "react-router-dom";
+import FinalQuestions from "weakest/FinalQuestions";
 
 const Music = {
     intro: HowlWrapper('/sounds/weakest/intro.mp3'),
@@ -42,11 +43,9 @@ const Timer = () => {
     return <TextContent>{timeStr}</TextContent>
 }
 
-const FinalQuestions = ({game}) => {
+const MFinalQuestions = ({game}) => {
     return <BlockContent>
-        {game.players.filter(player => !player.is_weak).map(player =>
-            <div key={player.id}>{player.name} : {player.right_answers}</div>
-        )}
+        <FinalQuestions game={game} />
     </BlockContent>;
 }
 
@@ -67,7 +66,7 @@ const useStateContent = (game) => {
         case "final":
             return <TextContent>Final</TextContent>;
         case "final_questions":
-            return <FinalQuestions game={game}/>;
+            return <MFinalQuestions game={game}/>;
         case "end":
             return <TextContent>Game over</TextContent>;
         default:

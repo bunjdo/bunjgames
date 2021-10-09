@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from "react";
 import Konva from "konva";
-import styles from "./Whirligig.scss";
+import styles from "whirligig/Whirligig.scss";
 
 const Whirligig = ({game, callback}) => {
     const container = useRef(null);

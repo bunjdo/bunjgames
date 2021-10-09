@@ -36,7 +36,6 @@ class Migration(migrations.Migration):
                 ('question', models.TextField()),
                 ('answer', models.TextField()),
                 ('is_final', models.BooleanField()),
-                ('is_answered_correctly', models.BooleanField(null=True)),
                 ('is_processed', models.BooleanField(default=False)),
                 ('is_correct', models.BooleanField(null=True)),
                 ('game', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='questions', to='weakest.game')),
