@@ -139,6 +139,16 @@ const ScoreControl = ({game}) => {
 };
 
 const useStateContent = (game) => {
+    const QuestionInfo = ({game}) => {
+        return [
+            <div key={1}>{getStatusName(game.state)}</div>,
+            <div key={2}>
+                <div>Name: {game.cur_item.name}</div>
+                {game.cur_item.description && <div>Description: {game.cur_item.description}</div>}
+                <div>Type: {game.cur_item.type}</div>
+            </div>
+        ]
+    }
     const {cur_item, cur_question} = game;
 
     if (!cur_item || !cur_question) {
@@ -147,20 +157,13 @@ const useStateContent = (game) => {
 
     if (game.state === 'question_whirligig') {
         return <BlockContent>
-            <div>{getStatusName(game.state)}</div>
-            <div>
-                <div>Name: {cur_item.name}</div>
-                {cur_item.description && <div>Description: {cur_item.description}</div>}
-                <div>Type: {cur_item.type}</div>
-            </div>
+            <QuestionInfo game={game} />
         </BlockContent>;
     }
 
     return <BlockContent>
         <div>
-            <div>Name: {cur_item.name}</div>
-            {cur_item.description && <div>Description: {cur_item.description}</div>}
-            <div>Type: {cur_item.type}</div>
+            <QuestionInfo game={game} />
         </div>
         <div className={styles.media}>
             <div>{cur_question.description}</div>
