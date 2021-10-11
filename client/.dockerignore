@@ -1,4 +1,5 @@
-.idea/
+/.idea
+/client.iml
 
 # dependencies
 /node_modules
@@ -8,3 +9,5 @@
 # production
 /build
 /public/bundle.js
+
+/.git

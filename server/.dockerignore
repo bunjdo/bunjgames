@@ -1,3 +1,5 @@
-venv/
-content.xml
-game.whirligig
+/.idea
+/server.iml
+
+/venv
+/.git
