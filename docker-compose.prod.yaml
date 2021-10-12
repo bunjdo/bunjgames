@@ -21,12 +21,16 @@ services:
     depends_on:
       - db
     restart: always
-  cron:
+  celery:
     image: *server
-    command: cron -f
+    command: celery -A server worker -E -B --loglevel=INFO
     environment: *server_environment
     depends_on:
       - db
+      - redis
+    restart: always
+  redis:
+    image: redis:6.2
     restart: always
   migrations:
     image: *server

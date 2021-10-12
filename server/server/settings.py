@@ -8,6 +8,10 @@ DEBUG = os.environ.get('DEBUG', 'False').lower() != 'false'
 
 ALLOWED_HOSTS = ['*']
 
+CELERY_TIMEZONE = 'UTC'
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_BROKER_URL = 'redis://redis:6379'
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
