@@ -20,7 +20,6 @@ class GameHandler:
         self.state = self.STATE_INITIAL
         self._game_name = game_name
         self._token = token
-        self._players_field = 'players' if game_name != 'feud' else 'teams'
         if self._game_name == 'weakest':
             self._button_method_name = 'save_bank'
         else:
@@ -33,8 +32,6 @@ class GameHandler:
     def _generate_button_click_params(self, player_id):
         if self._game_name == 'weakest':
             return dict()
-        elif self._game_name == 'feud':
-            return dict(team_id=player_id)
         else:
             return dict(player_id=player_id)
 
@@ -63,7 +60,7 @@ class GameHandler:
     def on_websocket_message(self, type, message):
         if type == 'game':
             players_from_message = {
-                player['id']: player for player in message[self._players_field]
+                player['id']: player for player in message['players']
             }
             self._on_players(players_from_message)
         elif type == 'error':
@@ -128,7 +125,7 @@ class BroadcastProtocol(asyncio.DatagramProtocol):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--version', action='version', version='v0.1.0')
+    parser.add_argument('--version', action='version', version='v0.2.0')
 
     parser.add_argument("--game", help="game type", type=str)
     parser.add_argument("--token", help="game token", type=str)

@@ -12,7 +12,7 @@ from common.utils import generate_token, BadFormatException, BadStateException, 
 
 
 class Game(models.Model):
-    STATE_WAITING_FOR_TEAMS = 'waiting_for_teams'
+    STATE_WAITING_FOR_PLAYERS = 'waiting_for_players'
     STATE_INTRO = 'intro'
     STATE_ROUND = 'round'
     STATE_BUTTON = 'button'
@@ -24,7 +24,7 @@ class Game(models.Model):
     STATE_END = 'end'
 
     STATES = (
-        STATE_WAITING_FOR_TEAMS,
+        STATE_WAITING_FOR_PLAYERS,
         STATE_INTRO,
         STATE_ROUND,
         STATE_BUTTON,
@@ -42,9 +42,9 @@ class Game(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     expired = models.DateTimeField()
     round = models.IntegerField(default=1)
-    state = models.CharField(max_length=25, choices=CHOICES_STATE, default=STATE_WAITING_FOR_TEAMS)
+    state = models.CharField(max_length=25, choices=CHOICES_STATE, default=STATE_WAITING_FOR_PLAYERS)
     question = models.ForeignKey('Question', on_delete=models.SET_NULL, null=True, related_name='+')
-    answerer = models.ForeignKey('Team', on_delete=models.SET_NULL, null=True, related_name='+')
+    answerer = models.ForeignKey('Player', on_delete=models.SET_NULL, null=True, related_name='+')
     timer = models.BigIntegerField(default=0)
 
     def get_questions(self):
@@ -53,8 +53,8 @@ class Game(models.Model):
             is_processed=False
         )
 
-    def get_teams(self):
-        return self.teams.all()
+    def get_players(self):
+        return self.players.all()
 
     def set_timer(self, t):
         self.timer = int(round((time.time() + t) * 1000))
@@ -70,13 +70,13 @@ class Game(models.Model):
         })
 
     def next_round(self):
-        team1 = self.get_teams().first()
-        team2 = self.get_teams().last()
+        player1 = self.get_players().first()
+        player2 = self.get_players().last()
 
-        team1.strikes = 0
-        team1.save()
-        team2.strikes = 0
-        team2.save()
+        player1.strikes = 0
+        player1.save()
+        player2.strikes = 0
+        player2.save()
 
         self.question.is_processed = True
         self.question.save(update_fields=['is_processed'])
@@ -85,7 +85,7 @@ class Game(models.Model):
             self.state = self.STATE_ROUND
             self.answerer = None
         else:
-            self.answerer = team1 if team1.score >= team2.score else team2
+            self.answerer = player1 if player1.score >= player2.score else player2
             self.round = 1
             self.state = self.STATE_FINAL
 
@@ -143,11 +143,11 @@ class Game(models.Model):
     def next_state(self, from_state=None):
         if from_state is not None and self.state != from_state:
             raise NothingToDoException()
-        if self.state == self.STATE_WAITING_FOR_TEAMS:
-            if self.teams.count() >= 2:
+        if self.state == self.STATE_WAITING_FOR_PLAYERS:
+            if self.players.count() >= 2:
                 self.state = self.STATE_INTRO
             else:
-                raise BadStateException('Not enough teams')
+                raise BadStateException('Not enough players')
         elif self.state == self.STATE_INTRO:
             self.state = self.STATE_ROUND
         elif self.state == self.STATE_ROUND:
@@ -194,7 +194,7 @@ class Game(models.Model):
             raise BadStateException('Bad state')
         self.save()
 
-    def button_click(self, team_id):
+    def button_click(self, player_id):
         if self.state != Game.STATE_BUTTON or self.answerer is not None:
             raise NothingToDoException()
         with transaction.atomic():
@@ -202,16 +202,16 @@ class Game(models.Model):
             if safe_game.state != Game.STATE_BUTTON or safe_game.answerer is not None:
                 raise NothingToDoException()
 
-            safe_game.answerer = safe_game.teams.get(id=team_id)
+            safe_game.answerer = safe_game.players.get(id=player_id)
             safe_game.save(update_fields=['answerer'])
         self.intercom('button')
         self.refresh_from_db()
 
     @transaction.atomic(savepoint=False)
-    def set_answerer(self, team_id=None):
+    def set_answerer(self, player_id=None):
         if self.state != self.STATE_BUTTON:
             raise NothingToDoException()
-        answerer = self.get_teams().get(id=team_id)
+        answerer = self.get_players().get(id=player_id)
         self.answerer = answerer
         self.state = self.STATE_ANSWERS
         self.save()
@@ -222,7 +222,7 @@ class Game(models.Model):
             raise NothingToDoException()
 
         answerer = self.answerer
-        opponent = self.get_teams().exclude(id=answerer.id).get()
+        opponent = self.get_players().exclude(id=answerer.id).get()
 
         if is_correct:
             answer = self.question.answers.get(id=answer_id)
@@ -306,8 +306,8 @@ class Answer(models.Model):
         ]
 
 
-class Team(models.Model):
-    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='teams')
+class Player(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='players')
     name = models.TextField()
     strikes = models.IntegerField(default=0)
     score = models.IntegerField(default=0)

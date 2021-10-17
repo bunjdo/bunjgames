@@ -39,9 +39,9 @@ const changeMusic = (old, next) => {
 }
 
 const useStateContent = (game) => {
-    const answerer = game.answerer && game.teams.find(t => t.id === game.answerer);
+    const answerer = game.answerer && game.players.find(t => t.id === game.answerer);
     switch (game.state) {
-        case "waiting_for_teams":
+        case "waiting_for_players":
             return <QRCodeContent value={'https://games.bunj.app/feud/client?token=' + game.token}>
                 {game.token}
             </QRCodeContent>;

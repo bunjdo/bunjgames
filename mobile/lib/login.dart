@@ -24,7 +24,7 @@ typedef LoginCallback = void Function(LoginData loginData);
 
 
 Future<LoginResponse> login(String game, String name, String token) async {
-  final url = '$API_URL/$game/v1/${game == 'feud' ? 'teams' : 'players'}/register';
+  final url = '$API_URL/$game/v1/players/register';
   final response = await http.post(
     Uri.parse(url),
     headers: <String, String>{

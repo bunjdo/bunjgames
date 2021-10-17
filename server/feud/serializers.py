@@ -2,10 +2,10 @@ from django.db.models import Prefetch
 from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 
-from feud.models import Game, Question, Answer, Team
+from feud.models import Game, Question, Answer, Player
 
 
-class TeamSerializer(serializers.Serializer):
+class PlayerSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField()
     strikes = serializers.IntegerField()
@@ -13,7 +13,7 @@ class TeamSerializer(serializers.Serializer):
     final_score = serializers.IntegerField()
 
     class Meta:
-        model = Team
+        model = Player
 
 
 class AnswerSerializer(serializers.Serializer):
@@ -46,7 +46,7 @@ class GameSerializer(serializers.Serializer):
     answerer = SerializerMethodField()
     final_questions = SerializerMethodField()
     timer = serializers.IntegerField()
-    teams = TeamSerializer(many=True)
+    players = PlayerSerializer(many=True)
 
     def get_answerer(self, model: Game):
         return model.answerer.id if model.answerer else None

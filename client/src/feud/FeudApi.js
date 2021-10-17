@@ -29,13 +29,13 @@ export default class FeudApi extends GameApi {
         formData.append("token", token);
         formData.append("name", name);
 
-        return this.axios.post('teams/register', formData, {
+        return this.axios.post('players/register', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(result => {
             this.saveToken(result.data.game.token);
-            this.savePlayerId(result.data.team_id);
+            this.savePlayerId(result.data.player_id);
             return result.data;
         });
     }
@@ -64,12 +64,12 @@ export default class FeudApi extends GameApi {
         this.execute("next_state", {from_state})
     }
 
-    button_click(team_id) {
-        this.execute("button_click", {team_id})
+    button_click(player_id) {
+        this.execute("button_click", {player_id})
     }
 
-    set_answerer(team_id) {
-        this.execute("set_answerer", {team_id})
+    set_answerer(player_id) {
+        this.execute("set_answerer", {player_id})
     }
 
     answer(is_correct, answer_id) {

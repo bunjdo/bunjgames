@@ -9,8 +9,8 @@ class FeudConsumer(Consumer):
     def routes(self):
         return dict(
             next_state=lambda game, from_state: game.next_state(from_state),
-            button_click=lambda game, team_id: game.button_click(team_id),
-            set_answerer=lambda game, team_id: game.set_answerer(team_id),
+            button_click=lambda game, player_id: game.button_click(player_id),
+            set_answerer=lambda game, player_id: game.set_answerer(player_id),
             answer=lambda game, is_correct, answer_id: game.answer(is_correct, answer_id),
         )
 

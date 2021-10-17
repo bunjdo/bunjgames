@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from common.utils import BadStateException, BadFormatException
-from feud.models import Game, Team
+from feud.models import Game, Player
 from feud.serializers import GameSerializer
 
 logger = logging.getLogger(__name__)
@@ -44,7 +44,7 @@ class CreateGameAPI(APIView):
         return Response(GameSerializer().to_representation(game))
 
 
-class RegisterTeamAPI(APIView):
+class RegisterPlayerAPI(APIView):
     serializer_class = GameSerializer
 
     def post(self, request):
@@ -54,19 +54,19 @@ class RegisterTeamAPI(APIView):
         except ObjectDoesNotExist:
             raise BadStateException('Game not found')
         try:
-            team = Team.objects.get(game=game, name=name)
+            player = Player.objects.get(game=game, name=name)
         except ObjectDoesNotExist:
-            if game.get_teams().count() >= 2:
+            if game.get_players().count() >= 2:
                 raise BadStateException('Game already have 2 teams')
-            if game.state != Game.STATE_WAITING_FOR_TEAMS:
+            if game.state != Game.STATE_WAITING_FOR_PLAYERS:
                 raise BadStateException('Game already started')
-            team = Team.objects.create(game=game, name=name)
+            player = Player.objects.create(game=game, name=name)
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(f'feud_{game.token}', {
                 'type': 'game',
                 'message': GameSerializer().to_representation(game)
             })
         return Response({
-            'team_id': team.id,
+            'player_id': player.id,
             'game': GameSerializer().to_representation(game)
         })

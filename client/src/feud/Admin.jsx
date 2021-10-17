@@ -24,11 +24,11 @@ const getStateName = (state) => {
     return calcStateName(state);
 }
 
-const Teams = ({game}) => {
-    return <VerticalList className={styles.teams}>
-        {game.teams.map(player =>
+const Players = ({game}) => {
+    return <VerticalList className={styles.players}>
+        {game.players.map(player =>
             <ListItem key={player.id} className={css(
-                styles.team,
+                styles.player,
                 player.id === game.answerer && styles.selected,
             )}>
                 {player.name}
@@ -59,7 +59,7 @@ const useStateContent = (game) => {
 
 const useControl = (game) => {
     const onNextClick = () => FEUD_API.next_state(game.state);
-    const onSetAnswererClick = (teamId) => FEUD_API.set_answerer(teamId);
+    const onSetAnswererClick = (playerId) => FEUD_API.set_answerer(playerId);
     const onWrongAnswerClick = () => FEUD_API.answer(false, 0);
 
     const onRepeatClick = () => FEUD_API.intercom("repeat");
@@ -68,8 +68,8 @@ const useControl = (game) => {
     switch (game.state) {
         case "button":
             buttons.push(<Button key={2} onClick={() => onWrongAnswerClick()}>Wrong</Button>)
-            buttons.push(game.teams.map(team =>
-                <Button key={100 + team.id} onClick={() => onSetAnswererClick(team.id)}>{team.name}</Button>,
+            buttons.push(game.players.map(player =>
+                <Button key={100 + player.id} onClick={() => onSetAnswererClick(player.id)}>{player.name}</Button>,
             ));
             break;
         case "answers":
@@ -92,13 +92,13 @@ const useControl = (game) => {
 };
 
 const gameScore = (game) => {
-    if (game.teams.length < 2) return "";
+    if (game.players.length < 2) return "";
     if (game.answerer && (game.state === 'final' || game.state === 'final_questions'
         || game.state === 'final_questions_reveal' || game.state === 'end')) {
-        const answerer = game.answerer && game.teams.find(t => t.id === game.answerer);
+        const answerer = game.answerer && game.players.find(t => t.id === game.answerer);
         return answerer.score + " | " + answerer.final_score;
     }
-    return game.teams[0].score + " : " + game.teams[1].score;
+    return game.players[0].score + " : " + game.players[1].score;
 }
 
 const FeudAdmin = () => {
@@ -122,7 +122,7 @@ const FeudAdmin = () => {
             <ButtonLink to={"/feud/view"}>View</ButtonLink>
             <Button onClick={onLogout}>Logout</Button>
         </Header>
-        <Content rightPanel={<Teams game={game}/>}>
+        <Content rightPanel={<Players game={game}/>}>
             {useStateContent(game)}
         </Content>
         <Footer>

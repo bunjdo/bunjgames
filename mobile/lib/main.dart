@@ -3,6 +3,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import 'dart:developer';
 import 'dart:convert';
 
+import 'entities.dart';
 import 'game.dart';
 import 'loading.dart';
 import 'login.dart';

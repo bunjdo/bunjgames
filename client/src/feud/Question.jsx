@@ -3,7 +3,7 @@ import styles from "./Question.scss";
 import {FaTimes} from "react-icons/all";
 
 const Question = ({game, showHiddenAnswers, className, onSelect}) => {
-    const answerer = game.answerer && game.teams.find(t => t.id === game.answerer);
+    const answerer = game.answerer && game.players.find(t => t.id === game.answerer);
     const answers = [];
     let strikesContainersCount = 0;
     game.question.answers.forEach((answer, index) => {
