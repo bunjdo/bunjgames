@@ -1,65 +1,47 @@
-import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
+import 'package:mobile/model/games/common.dart';
+import 'package:mobile/model/login.dart';
+import 'package:mobile/services/login.dart';
+import 'game.dart';
+import 'misc.dart';
 
-import 'entities.dart';
-import 'settings.dart';
 
+class LoginWrapperPage extends StatefulWidget {
+  @override
+  LoginWrapperPageState createState() => LoginWrapperPageState();
+}
 
-class LoginException implements Exception {
-  LoginException(this.message);
-
-  final String message;
+class LoginWrapperPageState extends State<LoginWrapperPage> {
+  LoginData? loginData;
 
   @override
-  String toString() {
-    return message;
+  void initState() {
+    super.initState();
+    LoginService().getLoginData().then((value) => setState(() {
+      this.loginData = loginData;
+    }));
   }
-}
 
-
-typedef LoginCallback = void Function(LoginData loginData);
-
-
-Future<LoginResponse> login(String game, String name, String token) async {
-  final url = '$API_URL/$game/v1/players/register';
-  final response = await http.post(
-    Uri.parse(url),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      'name': name,
-      'token': token,
-    }),
-  );
-  if (response.statusCode == 200) {
-    LoginResponse loginResponse = LoginResponse.fromJson(jsonDecode(response.body), game);
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('game', game);
-    prefs.setInt('playerId', loginResponse.playerId);
-    prefs.setString('name', name);
-    prefs.setString('token', token);
-    return loginResponse;
-  } else {
-    try {
-      var responseJson = jsonDecode(response.body) as Map<String, dynamic>;
-      throw LoginException(responseJson['detail']);
-    } catch (exception) {
-      throw LoginException('Error while login in');
+  @override
+  Widget build(BuildContext context) {
+    if (this.loginData == null) {
+      return LoginPage(onLogin: (LoginData loginData) {
+        setState(() {
+          this.loginData = loginData;
+        });
+      });
+    } else {
+      return WebSocketWrapper(
+        loginData: this.loginData!,
+        onLogout: () {
+          setState(() {
+            this.loginData = null;
+          });
+        },
+      );
     }
   }
-}
-
-
-Future<void> logout() async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.remove('game');
-  await prefs.remove('playerId');
-  await prefs.remove('name');
-  await prefs.remove('token');
 }
 
 
@@ -79,12 +61,9 @@ class LoginPageState extends State<LoginPage> {
   final String validationError = 'This field cannot be empty';
   final formKey = GlobalKey<FormState>();
 
-  String selectedGame = 'feud';
-  final games =  {
-    'feud': 'Friends feud',
-    'jeopardy': 'Jeopardy',
-    'weakest': 'The Weakest',
-    'whirligig': 'Whirligig'
+  var selectedGame = Game.FEUD;
+  final games = {
+    for (var name in Game.names) name: Game.fullName(name)
   };
 
   final nameController = TextEditingController();
@@ -118,7 +97,7 @@ class LoginPageState extends State<LoginPage> {
                 }).toList(),
                 onChanged: (String? value) {
                   setState(() {
-                    selectedGame = value ?? 'feud';
+                    selectedGame = value ?? Game.FEUD;
                   });
                 },
               ),
@@ -128,6 +107,9 @@ class LoginPageState extends State<LoginPage> {
                 decoration: const InputDecoration(
                   labelText: 'Username',
                 ),
+                inputFormatters: [
+                  UpperCaseTextFormatter(),
+                ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return validationError;
@@ -141,6 +123,9 @@ class LoginPageState extends State<LoginPage> {
                 decoration: const InputDecoration(
                   labelText: 'Token',
                 ),
+                inputFormatters: [
+                  UpperCaseTextFormatter(),
+                ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return validationError;
@@ -156,15 +141,10 @@ class LoginPageState extends State<LoginPage> {
                       try {
                         final name = nameController.text.toUpperCase().trim();
                         final token = tokenController.text.toUpperCase().trim();
-                        LoginResponse loginResponse = await login(
+                        var loginData = await LoginService().login(
                           selectedGame, name, token,
                         );
-                        widget.onLogin(LoginData(
-                            game: selectedGame,
-                            playerId: loginResponse.playerId,
-                            name: name,
-                            token: token,
-                        ));
+                        widget.onLogin(loginData);
                       } on LoginException catch (exception) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text(exception.toString()))

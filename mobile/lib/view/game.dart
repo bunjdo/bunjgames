@@ -1,12 +1,65 @@
 import 'package:flutter/material.dart';
-import 'styles.dart';
+import 'package:mobile/model/login.dart';
+import 'package:mobile/model/games/common.dart';
+import 'package:mobile/services/login.dart';
+import 'package:mobile/services/websocket.dart';
+import 'package:mobile/styles.dart';
+import 'loading.dart';
+
+
+class WebSocketWrapper extends StatefulWidget {
+  final LoginData loginData;
+  final VoidCallback onLogout;
+
+  const WebSocketWrapper({required this.loginData, required this.onLogout});
+
+  @override
+  WebSocketWrapperState createState() => WebSocketWrapperState();
+}
+
+class WebSocketWrapperState extends State<WebSocketWrapper> {
+  late final LoginData loginData;
+  late final WebSocketController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    this.loginData = widget.loginData;
+    this.controller = WebSocketController(loginData.game, loginData.token, () async {
+        await LoginService().logout();
+        widget.onLogout();
+    });
+    this.controller.getStream().forEach((message) {
+      if (message.type == 'game') {
+        this.onGame(message.message);
+      }
+    });
+  }
+
+  void onGame(Game game) {
+    setState(() {
+      this.game = game;
+    });
+  }
+
+  Game? game;
+
+  @override
+  Widget build(BuildContext context) {
+    return this.game == null ? LoadingPage() : GamePage(game: this.game!);
+  }
+
+}
 
 
 class GamePage extends StatefulWidget {
+  final Game game;
+
+  const GamePage({required this.game});
+
   @override
   GamePageState createState() => GamePageState();
 }
-
 
 
 class GamePageState extends State<GamePage> {

@@ -47,6 +47,7 @@ class GameSerializer(serializers.Serializer):
     final_questions = SerializerMethodField()
     timer = serializers.IntegerField()
     players = PlayerSerializer(many=True)
+    name = serializers.ReadOnlyField(default='feud')
 
     def get_answerer(self, model: Game):
         return model.answerer.id if model.answerer else None
