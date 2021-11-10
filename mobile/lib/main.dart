@@ -7,6 +7,6 @@ void main() => runApp(
   MaterialApp(
     title: 'Bunjgames',
     theme: appTheme,
-    home: LoginWrapperPage(),
+    home: LoginPage(),
   ),
 );

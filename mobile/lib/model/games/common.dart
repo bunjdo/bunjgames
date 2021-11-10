@@ -1,5 +1,9 @@
 import "dart:convert";
 
+import 'feud.dart';
+import 'jeopardy.dart';
+import 'weakest.dart';
+
 
 class WsMessage {
   static const TYPE_GAME = "game";
@@ -15,13 +19,22 @@ class WsMessage {
 
   static dynamic _messageFrom(String type, dynamic message) {
     switch (type) {
-      case TYPE_GAME: return Game(message);
+      case TYPE_GAME: return Game.createGameModel(message);
       case TYPE_INTERCOM: return message;
     }
     return json;
   }
 }
 
+class Player {
+  late final int id;
+  late final String name;
+
+  Player(Map<String, dynamic> json) {
+    this.id = json["id"];
+    this.name = json["name"];
+  }
+}
 
 class Game {
   static const FEUD = "feud";
@@ -34,7 +47,7 @@ class Game {
     switch(name) {
       case FEUD: return "Friends feud";
       case JEOPARDY: return "Jeopardy";
-      case FEUD: return "The Weakest";
+      case WEAKEST: return "The Weakest";
       default: return "Unknown";
     }
   }
@@ -47,7 +60,16 @@ class Game {
   Game(Map<String, dynamic> json) {
     this.token = json["token"];
     this.name = json["name"];
-    this.expired = json["expired"];
+    this.expired = DateTime.parse(json["expired"]);
     this.state = json["state"];
+  }
+
+  static Game createGameModel(Map<String, dynamic> json) {
+    switch(json["name"]) {
+      case Game.FEUD: return FeudGame(json);
+      case Game.JEOPARDY: return JeopardyGame(json);
+      case Game.WEAKEST: return WeakestGame(json);
+      default: return Game(json);
+    }
   }
 }

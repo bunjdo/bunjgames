@@ -64,16 +64,12 @@ class JeopardyTheme {
 }
 
 
-class JeopardyPlayer {
-  late final int id;
-  late final String name;
+class JeopardyPlayer extends Player {
   late final int balance;
   late final int finalBet;
   late final String finalAnswer;
 
-  JeopardyPlayer(Map<String, dynamic> json) {
-    this.id = json["id"];
-    this.name = json["name"];
+  JeopardyPlayer(Map<String, dynamic> json): super(json) {
     this.balance = json["balance"];
     this.finalBet = json["final_bet"];
     this.finalAnswer = json["final_answer"];
@@ -112,8 +108,9 @@ class JeopardyGame extends Game {
     this.round = json["round"];
     this.roundsCount = json["rounds_count"];
     this.isFinalRound = json["is_final_round"];
-    this.question = (json["question"]) ? JeopardyQuestion(json["question"]) : null;
-    this.themes = (json["themes"])
+    this.question = (json["question"] != null)
+        ? JeopardyQuestion(json["question"]) : null;
+    this.themes = (json["themes"] != null)
         ? [for (var value in json["themes"]) JeopardyTheme(value)]
         : null;
     this.players = [for (var value in json["players"]) JeopardyPlayer(value)];

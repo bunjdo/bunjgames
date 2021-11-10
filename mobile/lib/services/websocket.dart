@@ -43,12 +43,20 @@ class WebSocketController {
 
   }
 
+  void send(String method, Map<String, dynamic> params) {
+    this._channel.add(jsonEncode({
+      "method": method,
+      "params": params
+    }));
+  }
+
   Stream<WsMessage> getStream() {
     return this._streamController.stream;
   }
 
   close() async {
     await this._channel.close();
+    await this._streamController.close();
   }
 
 }

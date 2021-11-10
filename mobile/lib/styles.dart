@@ -12,6 +12,7 @@ const Color baseTextColorGray = Color(0xFF707072);
 const Color baseTextColorSelect = Color(0xFF000000);
 const Color valueTextColor = Color(0xFFDCCA77);
 
+const Color buttonColorGray = Color(0xFF4A4A4C);
 const Color buttonColorRed = Color(0xFFc63939);
 
 int tintValue(int value, double factor) => max(
@@ -71,6 +72,7 @@ ThemeData appTheme = ThemeData(
     headline5: TextStyle(color: baseTextColor),
     headline6: TextStyle(color: baseTextColor),
   ),
+  iconTheme: IconThemeData(color: baseTextColor),
   inputDecorationTheme: InputDecorationTheme(
     labelStyle: new TextStyle(color: baseTextColor),
     enabledBorder: UnderlineInputBorder(

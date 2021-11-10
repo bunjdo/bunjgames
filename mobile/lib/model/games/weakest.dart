@@ -23,17 +23,13 @@ class WeakestQuestionInfo {
 }
 
 
-class WeakestPlayer {
-  late final int id;
-  late final String name;
+class WeakestPlayer extends Player {
   late final bool isWeak;
   late final int? weak;
   late final int rightAnswers;
   late final int bankIncome;
 
-  WeakestPlayer(Map<String, dynamic> json) {
-    this.id = json["id"];
-    this.name = json["name"];
+  WeakestPlayer(Map<String, dynamic> json): super(json) {
     this.isWeak = json["is_weak"];
     this.weak = json["weak"];
     this.rightAnswers = json["right_answers"];
@@ -42,7 +38,7 @@ class WeakestPlayer {
 }
 
 
-class JeopardyGame extends Game {
+class WeakestGame extends Game {
   static const STATE_WAITING_FOR_PLAYERS = 'waiting_for_players';
   static const STATE_INTRO = 'intro';
   static const STATE_ROUND = 'round';
@@ -66,17 +62,18 @@ class JeopardyGame extends Game {
   late final int timer;
   late final List<WeakestPlayer> players;
 
-  JeopardyGame(Map<String, dynamic> json) : super(json) {
+  WeakestGame(Map<String, dynamic> json) : super(json) {
     this.scoreMultiplier = json["score_multiplier"];
     this.score = json["score"];
     this.bank = json["bank"];
     this.tmpScore = json["tmp_score"];
     this.round = json["round"];
-    this.question = (json["question"]) ? WeakestQuestion(json["question"]) : null;
+    this.question = (json["question"] != null)
+        ? WeakestQuestion(json["question"]) : null;
     this.answerer = json["answerer"];
     this.weakest = json["weakest"];
     this.strongest = json["strongest"];
-    this.finalQuestions = (json["final_questions"])
+    this.finalQuestions = (json["final_questions"] != null)
         ? [for (var value in json["final_questions"]) WeakestQuestionInfo(value)]
         : null;
     this.timer = json["timer"];

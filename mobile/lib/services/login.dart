@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
@@ -29,10 +30,13 @@ class LoginService {
     return _singleton;
   }
 
-  LoginService._internal();
+  LoginService._internal() {
+    this._getLoginData().then((value) => _streamController.add(value));
+  }
 
   SharedPreferences? _sharedPreferences;
   LoginData? _loginData;
+  StreamController<LoginData?> _streamController = new StreamController.broadcast(sync: true);
 
   Future<SharedPreferences> _getSharedPreferences() async {
     if (this._sharedPreferences == null) {
@@ -41,7 +45,7 @@ class LoginService {
     return this._sharedPreferences!;
   }
 
-  Future<LoginData?> getLoginData() async {
+  Future<LoginData?> _getLoginData() async {
     var sharedPreferences = await this._getSharedPreferences();
     if (this._loginData == null) {
       log('Retrieving LoginData from Shared Prefs');
@@ -62,22 +66,22 @@ class LoginService {
 
   Future<void> _setLoginData(LoginData? loginData) async {
     var sharedPreferences = await this._getSharedPreferences();
-    if (_loginData == null) {
+    if (loginData == null) {
       await sharedPreferences.remove('game');
       await sharedPreferences.remove('playerId');
       await sharedPreferences.remove('name');
       await sharedPreferences.remove('token');
     } else {
-      loginData!;
       sharedPreferences.setString('game', loginData.game);
       sharedPreferences.setInt('playerId', loginData.playerId);
       sharedPreferences.setString('name', loginData.name);
       sharedPreferences.setString('token', loginData.token);
     }
     this._loginData = loginData;
+    _streamController.add(loginData);
   }
 
-  Future<LoginData> login(String game, String name, String token) async {
+  Future<void> login(String game, String name, String token) async {
     final url = '$API_URL/$game/v1/players/register';
     final response = await http.post(
       Uri.parse(url),
@@ -98,7 +102,6 @@ class LoginService {
         token: token,
       );
       await this._setLoginData(loginData);
-      return loginData;
     } else {
       try {
         var responseJson = jsonDecode(response.body) as Map<String, dynamic>;
@@ -111,6 +114,18 @@ class LoginService {
 
   Future<void> logout() async {
     await this._setLoginData(null);
+  }
+
+  Stream<LoginData?> getStream() {
+    return this._streamController.stream;
+  }
+
+  LoginData? getLoginData() {
+    return this._loginData;
+  }
+
+  close() async {
+    await this._streamController.close();
   }
 
 }

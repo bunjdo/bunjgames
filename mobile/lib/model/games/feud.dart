@@ -17,7 +17,6 @@ class FeudAnswer {
   }
 }
 
-
 class FeudQuestion {
   late final int id;
   late final String text;
@@ -32,23 +31,17 @@ class FeudQuestion {
   }
 }
 
-
-class FeudPlayer {
-  late final int id;
-  late final String name;
+class FeudPlayer extends Player {
   late final int strikes;
   late final int score;
   late final int finalScore;
 
-  FeudPlayer(Map<String, dynamic> json) {
-    this.id = json["id"];
-    this.name = json["name"];
+  FeudPlayer(Map<String, dynamic> json) : super(json) {
     this.strikes = json["strikes"];
     this.score = json["score"];
     this.finalScore = json["final_score"];
   }
 }
-
 
 class FeudGame extends Game {
   static const STATE_WAITING_FOR_PLAYERS = "waiting_for_players";
@@ -71,9 +64,9 @@ class FeudGame extends Game {
 
   FeudGame(Map<String, dynamic> json) : super(json) {
     this.round = json["round"];
-    this.question = (json["question"]) ? FeudQuestion(json["question"]) : null;
+    this.question = (json["question"] != null) ? FeudQuestion(json["question"]) : null;
     this.answerer = json["answerer"];
-    this.finalQuestions = (json["final_questions"])
+    this.finalQuestions = (json["final_questions"] != null)
         ? [for (var value in json["final_questions"]) FeudQuestion(value)]
         : null;
     this.timer = json["timer"];
