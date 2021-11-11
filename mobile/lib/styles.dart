@@ -84,6 +84,9 @@ ThemeData appTheme = ThemeData(
     border: UnderlineInputBorder(
     ),
   ),
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(primary: Colors.white)
+  ),
   textSelectionTheme: TextSelectionThemeData(
     cursorColor: baseTextColor,
   ),

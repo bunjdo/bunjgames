@@ -82,7 +82,8 @@ class LoginService {
   }
 
   Future<void> login(String game, String name, String token) async {
-    final url = '$API_URL/$game/v1/players/register';
+    var apiUrl = (await SettingsService.getInstance()).getString(SettingsType.API_URL);
+    final url = '$apiUrl/$game/v1/players/register';
     final response = await http.post(
       Uri.parse(url),
       headers: <String, String>{

@@ -65,7 +65,7 @@ class FeudGamePage extends GamePage {
           ),
         ],
       ),
-      drawer: GameDrawer(game: this.game),
+      drawer: MainDrawer(),
       endDrawer: PlayersDrawer(players: this.game.players),
       body: _drawGameState(),
     );

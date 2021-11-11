@@ -35,6 +35,7 @@ class LoginPageState extends State<LoginPage> {
     if (this.loginData == null) {
       return Scaffold(
         appBar: AppBar(title: Text('Bunjgames')),
+        drawer: MainDrawer(),
         body: Container(
           margin: EdgeInsets.all(16),
           child: LoginForm(),

@@ -12,9 +12,11 @@ class WebSocketController {
   final VoidCallback _onError;
   late final String _url;
   late WebSocket _channel;
+  final SettingsService settings;
 
-  WebSocketController(String game, String token, this._onError) {
-    this._url = '$WS_URL/$game/ws/$token';
+  WebSocketController(String game, String token, this._onError, this.settings) {
+    var wsUrl = this.settings.getString(SettingsType.WS_URL);
+    this._url = '$wsUrl/$game/ws/$token';
     this._init();
   }
 

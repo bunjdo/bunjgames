@@ -5,6 +5,7 @@ import 'package:mobile/model/games/weakest.dart';
 import 'package:mobile/model/login.dart';
 import 'package:mobile/model/games/common.dart';
 import 'package:mobile/services/login.dart';
+import 'package:mobile/services/settings.dart';
 import 'package:mobile/services/websocket.dart';
 import 'package:mobile/styles.dart';
 import 'package:mobile/view/loading.dart';
@@ -30,13 +31,18 @@ class WebSocketWrapperState extends State<WebSocketWrapper> {
   void initState() {
     super.initState();
     this.loginData = widget.loginData;
-    this.wsController = WebSocketController(loginData.game, loginData.token, () async {
-        await LoginService().logout();
-    });
-    this.wsController.getStream().forEach((message) {
-      if (message.type == 'game') {
-        this.onGame(message.message);
-      }
+    SettingsService.getInstance().then((settings) {
+      this.wsController = WebSocketController(
+          loginData.game,
+          loginData.token,
+          () async => await LoginService().logout(),
+          settings
+      );
+      this.wsController.getStream().forEach((message) {
+        if (message.type == 'game') {
+          this.onGame(message.message);
+        }
+      });
     });
   }
 
@@ -83,7 +89,7 @@ class NotImplementedGamePage extends GamePage {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(this.game.name)),
-      drawer: GameDrawer(game: this.game),
+      drawer: MainDrawer(),
       body: Center(
         child: Text('This game is not implemented yet. Try to update this application.'),
       ),
@@ -92,9 +98,8 @@ class NotImplementedGamePage extends GamePage {
 }
 
 
-class GameDrawer extends StatelessWidget {
-  final Game game;
-  const GameDrawer({required this.game});
+class MainDrawer extends StatelessWidget {
+  const MainDrawer();
 
   @override
   Widget build(BuildContext context) {
@@ -128,12 +133,12 @@ class GameDrawer extends StatelessWidget {
                 );
               },
             ),
-            ListTile(
+            LoginService().getLoginData() != null ? ListTile(
               title: Text('Exit'),
               onTap: () async {
                 await LoginService().logout();
               },
-            ),
+            ) : ListTile(),
           ],
         ),
       ),
