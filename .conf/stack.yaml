@@ -1,0 +1,57 @@
+version: '3.0'
+services:
+
+  client:
+    image: &client bunjdo/bunjgames-client:latest
+    environment:
+      - REACT_APP_API_ENDPOINT=https://api.games.bunj.app/
+      - REACT_APP_WS_ENDPOINT=wss://api.games.bunj.app/
+    ports:
+      - 8080:80
+    restart: always
+
+  server:
+    image: &server bunjdo/bunjgames-server:latest
+    command: daphne -b 0.0.0.0 -p 80 server.asgi:application
+    volumes:
+      - /srv/bunjgames/media:/app/media
+    environment: &server_environment
+      - DEBUG=false
+      - DATABASE_HOST=db
+    ports:
+      - 8000:80
+    depends_on:
+      - db
+
+  celery:
+    image: *server
+    command: celery -A server worker -E -B --loglevel=INFO
+    environment: *server_environment
+    depends_on:
+      - db
+      - redis
+
+  redis:
+    image: redis:6.2
+
+  migrations:
+    image: *server
+    command: python manage.py migrate
+    environment: *server_environment
+    depends_on:
+      - db
+    deploy:
+      restart_policy:
+        condition: none
+
+  db:
+    image: postgres:13.0
+    volumes:
+      - bunjgames-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=bunjgames
+
+volumes:
+  bunjgames-db-data:
+
