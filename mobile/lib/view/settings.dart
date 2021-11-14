@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/services/login.dart';
 import 'package:mobile/services/settings.dart';
 import 'package:mobile/styles.dart';
 import 'package:settings_ui/settings_ui.dart';
@@ -136,7 +137,6 @@ class SettingsFormState extends State<SettingsForm> {
         SettingsSection(
           title: 'UDP api',
           titleTextStyle: TextStyle(color: baseTextColor),
-          titlePadding: EdgeInsets.only(left: 16, top: 16),
           tiles: [
             SettingsTile.switchTile(
               title: 'Use UDP api',
@@ -151,6 +151,8 @@ class SettingsFormState extends State<SettingsForm> {
               title: 'UDP IP',
               subtitle: settings!.getString(SettingsType.UDP_IP),
               leading: Icon(Icons.cloud_queue, color: baseTextColor),
+              enabled: settings!.getBool(SettingsType.USE_UDP_IP),
+              iosChevronPadding: null,
               onPressed: (BuildContext context) {
                 var isDefault = settings!.getString(SettingsType.UDP_IP) == SettingsType.UDP_IP.defaultValue;
                 _displayTextInputDialog(
@@ -168,7 +170,9 @@ class SettingsFormState extends State<SettingsForm> {
           title: '',
           tiles: [
             SettingsTile(
-              title: 'You might want to restart application in order to apply settings',
+              title: 'Apply settings',
+              leading: Icon(Icons.save, color: baseTextColor),
+              onPressed: (context) async => await LoginService().restart(),
             ),
           ],
         ),

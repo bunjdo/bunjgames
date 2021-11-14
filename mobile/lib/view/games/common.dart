@@ -56,7 +56,7 @@ class WebSocketWrapperState extends State<WebSocketWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return this.game == null
+    return this.game == null || wsController == null
         ? LoadingPage() : GamePage.createGamePage(this.game!, wsController);
   }
 
