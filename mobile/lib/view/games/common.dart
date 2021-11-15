@@ -16,6 +16,7 @@ import 'package:mobile/view/settings.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'feud.dart';
+import 'jeopardy.dart';
 
 
 class WebSocketWrapper extends StatefulWidget {
@@ -31,7 +32,6 @@ class WebSocketWrapperState extends State<WebSocketWrapper> {
   late final LoginData loginData;
   WebSocketController? wsController;
   StreamSubscription<WsMessage>? subscription;
-
 
   @override
   void initState() {
@@ -83,7 +83,7 @@ abstract class GamePage extends StatelessWidget {
   static createGamePage(Game game, WebSocketController wsController) {
     switch(game.name) {
       case Game.FEUD: return FeudGamePage(game as FeudGame, wsController);
-      case Game.JEOPARDY: return null;
+      case Game.JEOPARDY: return JeopardyGamePage(game as JeopardyGame, wsController);
       case Game.WEAKEST: return WeakestGamePage(game as WeakestGame, wsController);
       default: return NotImplementedGamePage(game, wsController);
     }
