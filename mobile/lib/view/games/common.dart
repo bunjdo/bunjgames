@@ -10,6 +10,7 @@ import 'package:mobile/services/websocket.dart';
 import 'package:mobile/styles.dart';
 import 'package:mobile/view/loading.dart';
 import 'package:mobile/view/settings.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'feud.dart';
 
@@ -105,16 +106,12 @@ class MainDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: Container(
-        color: baseBackground,
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
             Container(
-              height: Scaffold.of(context).appBarMaxHeight,
+              height: 84,
               child: DrawerHeader(
-                decoration: BoxDecoration(
-                  color: baseBackgroundDark,
-                ),
                 child: Row(
                   children: [
                     Icon(Icons.settings),
@@ -123,6 +120,21 @@ class MainDrawer extends StatelessWidget {
                   ],
                 ),
               ),
+            ),
+            ListTile(
+              title: Text('Main site'),
+              onTap: () async {
+                const url = 'https://games.bunj.app';
+                if (await canLaunch(url)) {
+                  await launch(url);
+                } else {
+                  throw 'Could not launch $url';
+                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
+              },
             ),
             ListTile(
               title: Text('Settings'),
@@ -169,16 +181,12 @@ class PlayersDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: Container(
-        color: baseBackground,
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
             Container(
-              height: Scaffold.of(context).appBarMaxHeight,
+              height: 84,
               child: DrawerHeader(
-                decoration: BoxDecoration(
-                  color: baseBackgroundDark,
-                ),
                 child: Row(
                   children: [
                     Icon(Icons.account_box),

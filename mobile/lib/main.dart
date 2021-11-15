@@ -6,7 +6,8 @@ import 'styles.dart';
 void main() => runApp(
   MaterialApp(
     title: 'Bunjgames',
-    theme: appTheme,
+    theme: lightTheme,
+    darkTheme: darkTheme,
     home: LoginPage(),
   ),
 );

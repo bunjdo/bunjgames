@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/services/login.dart';
 import 'package:mobile/services/settings.dart';
-import 'package:mobile/styles.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -42,7 +41,6 @@ class SettingsFormState extends State<SettingsForm> {
   ) async {
     return showDialog(context: context, builder: (context) {
       return AlertDialog(
-        backgroundColor: baseBackgroundDark,
         title: Text(title),
         content: TextField(
           onChanged: (value) {
@@ -93,19 +91,17 @@ class SettingsFormState extends State<SettingsForm> {
   @override
   Widget build(BuildContext context) {
     if (this.settings == null)
-      return SettingsList(backgroundColor: baseBackground, sections: []);
+      return SettingsList(sections: []);
     return SettingsList(
-      backgroundColor: baseBackground,
       sections: [
         SettingsSection(
           title: 'Api',
-          titleTextStyle: TextStyle(color: baseTextColor),
           titlePadding: EdgeInsets.only(left: 16, top: 16),
           tiles: [
             SettingsTile(
               title: 'Api url',
               subtitle: settings!.getString(SettingsType.API_URL),
-              leading: Icon(Icons.cloud, color: baseTextColor),
+              leading: Icon(Icons.cloud),
               onPressed: (BuildContext context) {
                 var isDefault = settings!.getString(SettingsType.API_URL) == SettingsType.API_URL.defaultValue;
                 _displayTextInputDialog(
@@ -120,7 +116,7 @@ class SettingsFormState extends State<SettingsForm> {
             SettingsTile(
               title: 'WebSocket url',
               subtitle: settings!.getString(SettingsType.WS_URL),
-              leading: Icon(Icons.cloud_circle, color: baseTextColor),
+              leading: Icon(Icons.cloud_circle),
               onPressed: (BuildContext context) {
                 var isDefault = settings!.getString(SettingsType.WS_URL) == SettingsType.WS_URL.defaultValue;
                 _displayTextInputDialog(
@@ -136,11 +132,10 @@ class SettingsFormState extends State<SettingsForm> {
         ),
         SettingsSection(
           title: 'UDP api',
-          titleTextStyle: TextStyle(color: baseTextColor),
           tiles: [
             SettingsTile.switchTile(
               title: 'Use UDP api',
-              leading: Icon(Icons.hdr_strong, color: baseTextColor),
+              leading: Icon(Icons.hdr_strong),
               switchValue: settings!.getBool(SettingsType.USE_UDP_IP),
               onToggle: (bool value) async {
                 await settings!.setBool(SettingsType.USE_UDP_IP, value);
@@ -150,7 +145,7 @@ class SettingsFormState extends State<SettingsForm> {
             SettingsTile(
               title: 'UDP IP',
               subtitle: settings!.getString(SettingsType.UDP_IP),
-              leading: Icon(Icons.cloud_queue, color: baseTextColor),
+              leading: Icon(Icons.cloud_queue),
               enabled: settings!.getBool(SettingsType.USE_UDP_IP),
               iosChevronPadding: null,
               onPressed: (BuildContext context) {
@@ -171,7 +166,7 @@ class SettingsFormState extends State<SettingsForm> {
           tiles: [
             SettingsTile(
               title: 'Apply settings',
-              leading: Icon(Icons.save, color: baseTextColor),
+              leading: Icon(Icons.save),
               onPressed: (context) async => await LoginService().restart(),
             ),
           ],
