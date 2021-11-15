@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:mobile/model/games/common.dart';
 import 'package:mobile/model/games/weakest.dart';
@@ -29,11 +27,12 @@ class WeakestGamePage extends GamePage {
     }
   }
 
-  void onWeakestChoose(Player player) {
+  void onWeakestChoose(Player weakest) {
     this.wsController.send(
         "select_weakest",
         {
-          "player_id": player.id
+          "player_id": LoginService().getLoginData()?.playerId,
+          "weakest_id": weakest.id
         }
     );
   }
@@ -72,7 +71,7 @@ class WeakestGamePage extends GamePage {
                 ) : ListTile(
                   title: Text(item.name),
                   leading: Icon(Icons.account_box),
-                  enabled: selectedPlayer.id != item.id,
+                  enabled: selectedPlayer.id == item.id,
                 );
               },
             )

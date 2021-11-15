@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/model/games/feud.dart';
 import 'package:mobile/model/games/jeopardy.dart';
@@ -27,7 +29,9 @@ class WebSocketWrapper extends StatefulWidget {
 
 class WebSocketWrapperState extends State<WebSocketWrapper> {
   late final LoginData loginData;
-  late final WebSocketController wsController;
+  WebSocketController? wsController;
+  StreamSubscription<WsMessage>? subscription;
+
 
   @override
   void initState() {
@@ -40,7 +44,7 @@ class WebSocketWrapperState extends State<WebSocketWrapper> {
           () async => await LoginService().logout(),
           settings
       );
-      this.wsController.getStream().forEach((message) {
+      this.wsController?.getStream().listen((message) {
         if (message.type == 'game') {
           this.onGame(message.message);
         }
@@ -54,12 +58,17 @@ class WebSocketWrapperState extends State<WebSocketWrapper> {
     });
   }
 
+  void dispose() {
+    subscription?.cancel();
+    super.dispose();
+  }
+
   Game? game;
 
   @override
   Widget build(BuildContext context) {
     return this.game == null || wsController == null
-        ? LoadingPage() : GamePage.createGamePage(this.game!, wsController);
+        ? LoadingPage() : GamePage.createGamePage(this.game!, wsController!);
   }
 
 }
