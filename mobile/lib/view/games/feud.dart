@@ -36,7 +36,7 @@ class FeudGamePage extends GamePage {
           ),
         );
       case FeudGame.STATE_END:
-        Center(
+        return Center(
           child: IconButton(
             icon: Icon(Icons.exit_to_app, size: 80),
             onPressed: () {
