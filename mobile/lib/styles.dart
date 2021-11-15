@@ -8,6 +8,8 @@ const Color backgroundColor = Color(0xFF31495e);
 
 const Color buttonColorGray = Color(0xFF4A4A4C);
 const Color buttonColorRed = Color(0xFFc63939);
+const buttonTextColor = Color(0xFFE5E5ED);
+
 
 int tintValue(int value, double factor) => max(
     0, min((value + ((255 - value) * factor)).round(), 255)

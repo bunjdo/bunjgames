@@ -8,6 +8,7 @@ import 'package:mobile/services/login.dart';
 import 'package:mobile/services/settings.dart';
 import 'package:mobile/services/websocket.dart';
 import 'package:mobile/styles.dart';
+import 'package:mobile/view/games/weakest.dart';
 import 'package:mobile/view/loading.dart';
 import 'package:mobile/view/settings.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -74,7 +75,7 @@ abstract class GamePage extends StatelessWidget {
     switch(game.name) {
       case Game.FEUD: return FeudGamePage(game as FeudGame, wsController);
       case Game.JEOPARDY: return null;
-      case Game.WEAKEST: return null;
+      case Game.WEAKEST: return WeakestGamePage(game as WeakestGame, wsController);
       default: return NotImplementedGamePage(game, wsController);
     }
   }
@@ -227,7 +228,7 @@ class ButtonWidget extends StatelessWidget {
           padding: EdgeInsets.all(16),
           shape: CircleBorder(),
           onPressed: this.onPressed,
-          child: Text(this.text),
+          child: Text(this.text, style: TextStyle(color: buttonTextColor, fontSize: 80),),
         ),
       ),
     );
