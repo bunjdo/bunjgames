@@ -15,11 +15,12 @@ class GameHandler:
     STATE_SETUP = 'setup'
     STATE_READY = 'ready'
 
-    def __init__(self, game_name, token, url):
+    def __init__(self, game_name, token, url, setup_required):
         self.websocket = None
         self.state = self.STATE_INITIAL
         self._game_name = game_name
         self._token = token
+        self._setup_required = setup_required
         if self._game_name == 'weakest':
             self._button_method_name = 'save_bank'
         else:
@@ -40,6 +41,12 @@ class GameHandler:
         return f'{self._url}{"" if self._url.endswith("/") else "/"}{self._game_name}/ws/{self._token}'
 
     def _check_unassigned_players(self, force_message=False):
+        if not self._setup_required:
+            self.player_to_setup = None
+            if self.state != self.STATE_READY:
+                print('Setup is not required')
+            self.state = self.STATE_READY
+            return
         if all(player_id in self._ip_to_player_id_binding.values() for player_id in self._players.keys()):
             if self.state != self.STATE_READY:
                 self.player_to_setup = None
@@ -74,7 +81,10 @@ class GameHandler:
                 self.player_to_setup = None
                 self._check_unassigned_players(force_message=True)
         else:
-            player_id = self._ip_to_player_id_binding.get(message)
+            if not self._setup_required:
+                player_id = int(message)
+            else:
+                player_id = self._ip_to_player_id_binding.get(message)
             player = self._players.get(player_id) if player_id else None
             if player is not None and self.websocket:
                 print(f'Button click from player {player["name"]} ({message})')
@@ -125,7 +135,7 @@ class BroadcastProtocol(asyncio.DatagramProtocol):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--version', action='version', version='v0.2.0')
+    parser.add_argument('--version', action='version', version='v0.3.0')
 
     parser.add_argument("--game", help="game type", type=str)
     parser.add_argument("--token", help="game token", type=str)
@@ -134,6 +144,8 @@ if __name__ == "__main__":
 
     parser.add_argument("--broadcast_addr", type=str)
     parser.add_argument("--local_addr", type=str, default='0.0.0.0:9009')
+
+    parser.add_argument("--setup_required", type=bool, default=False)
 
     args = parser.parse_args()
 
@@ -145,7 +157,7 @@ if __name__ == "__main__":
         broadcast_addr = f'{bits[0]}.{bits[1]}.{bits[2]}.255:9009'
         print(f'Selecting broadcast address: {broadcast_addr}')
 
-    game_handler = GameHandler(args.game, args.token, args.url)
+    game_handler = GameHandler(args.game, args.token, args.url, args.setup_required)
 
     executor = ThreadPoolExecutor(2)
     event_loop = asyncio.get_event_loop()
