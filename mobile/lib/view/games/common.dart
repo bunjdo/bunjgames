@@ -19,42 +19,43 @@ import 'feud.dart';
 import 'jeopardy.dart';
 
 
-class WebSocketWrapper extends StatefulWidget {
+class GameWrapper extends StatefulWidget {
   final LoginData loginData;
 
-  const WebSocketWrapper({required this.loginData});
+  const GameWrapper({required this.loginData});
 
   @override
-  WebSocketWrapperState createState() => WebSocketWrapperState();
+  GameWrapperState createState() => GameWrapperState();
 }
 
-class WebSocketWrapperState extends State<WebSocketWrapper> {
-  late final LoginData loginData;
+class GameWrapperState extends State<GameWrapper> {
+  Game? game;
   WebSocketController? wsController;
   StreamSubscription<WsMessage>? subscription;
 
   @override
   void initState() {
     super.initState();
-    this.loginData = widget.loginData;
     SettingsService.getInstance().then((settings) {
       this.wsController = WebSocketController(
-          loginData.game,
-          loginData.token,
-          () async => await LoginService().logout(),
+          widget.loginData.game,
+          widget.loginData.token,
+              () async => await LoginService().logout(),
           settings
       );
-      this.wsController?.getStream().listen((message) {
-        if (message.type == 'game') {
-          this.onGame(message.message);
+      subscription = this.wsController?.getStream().listen((message) {
+        switch (message.type) {
+          case WsMessage.TYPE_GAME:
+            setState(() {
+              this.game = message.message;
+            });
+            break;
+          case WsMessage.TYPE_ERROR:
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(message.message.toString()))
+            );
         }
       });
-    });
-  }
-
-  void onGame(Game game) {
-    setState(() {
-      this.game = game;
     });
   }
 
@@ -63,14 +64,20 @@ class WebSocketWrapperState extends State<WebSocketWrapper> {
     super.dispose();
   }
 
-  Game? game;
-
   @override
   Widget build(BuildContext context) {
     return this.game == null || wsController == null
-        ? LoadingPage() : GamePage.createGamePage(this.game!, wsController!);
+        ? LoadingPage() : this._buildGamePage();
   }
 
+  Widget _buildGamePage() {
+    switch(game!.name) {
+      case Game.FEUD: return FeudGamePage(game as FeudGame, wsController!);
+      case Game.JEOPARDY: return JeopardyGamePage(game as JeopardyGame, wsController!);
+      case Game.WEAKEST: return WeakestGamePage(game as WeakestGame, wsController!);
+      default: return NotImplementedGamePage(game!, wsController!);
+    }
+  }
 }
 
 
@@ -79,15 +86,6 @@ abstract class GamePage extends StatelessWidget {
   final WebSocketController wsController;
 
   const GamePage({required this.game, required this.wsController});
-
-  static createGamePage(Game game, WebSocketController wsController) {
-    switch(game.name) {
-      case Game.FEUD: return FeudGamePage(game as FeudGame, wsController);
-      case Game.JEOPARDY: return JeopardyGamePage(game as JeopardyGame, wsController);
-      case Game.WEAKEST: return WeakestGamePage(game as WeakestGame, wsController);
-      default: return NotImplementedGamePage(game, wsController);
-    }
-  }
 }
 
 
@@ -120,7 +118,6 @@ class MainDrawer extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: <Widget>[
             Container(
-              height: 84,
               child: DrawerHeader(
                 child: Row(
                   children: [
@@ -195,7 +192,6 @@ class PlayersDrawer extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: <Widget>[
             Container(
-              height: 84,
               child: DrawerHeader(
                 child: Row(
                   children: [

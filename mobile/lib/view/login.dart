@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mobile/model/games/common.dart';
 import 'package:mobile/model/login.dart';
 import 'package:mobile/services/login.dart';
@@ -42,7 +41,7 @@ class LoginPageState extends State<LoginPage> {
         ),
       );
     } else {
-      return WebSocketWrapper(
+      return GameWrapper(
         loginData: this.loginData!,
       );
     }
@@ -101,7 +100,6 @@ class LoginFormState extends State<LoginForm> {
           ),
           TextFormField(
             controller: nameController,
-            textCapitalization: TextCapitalization.characters,
             decoration: const InputDecoration(
               labelText: 'Username',
             ),
@@ -117,7 +115,6 @@ class LoginFormState extends State<LoginForm> {
           ),
           TextFormField(
             controller: tokenController,
-            textCapitalization: TextCapitalization.characters,
             decoration: const InputDecoration(
               labelText: 'Token',
             ),

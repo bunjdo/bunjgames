@@ -8,6 +8,7 @@ import 'weakest.dart';
 class WsMessage {
   static const TYPE_GAME = "game";
   static const TYPE_INTERCOM = "intercom";
+  static const TYPE_ERROR = "error";
 
   late final String type;
   late final dynamic message;
@@ -21,6 +22,7 @@ class WsMessage {
     switch (type) {
       case TYPE_GAME: return Game.createGameModel(message);
       case TYPE_INTERCOM: return message;
+      case TYPE_ERROR: return message as String;
     }
     return json;
   }

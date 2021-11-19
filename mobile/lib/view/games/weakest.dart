@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/model/games/common.dart';
 import 'package:mobile/model/games/weakest.dart';
 import 'package:mobile/services/login.dart';
+import 'package:mobile/services/udp.dart';
 import 'package:mobile/services/websocket.dart';
 
 import 'common.dart';
@@ -17,6 +18,7 @@ class WeakestGamePage extends GamePage {
   }
 
   void onButtonClick() {
+    UDPService().send(LoginService().getLoginData()?.playerId ?? 0);
     if (this.game.answerer != null && this.game.answerer == LoginService().getLoginData()?.playerId) {
       this.wsController.send(
           "button_click",

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/services/login.dart';
 import 'package:mobile/services/settings.dart';
+import 'package:mobile/services/udp.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -167,7 +168,10 @@ class SettingsFormState extends State<SettingsForm> {
             SettingsTile(
               title: 'Apply settings',
               leading: Icon(Icons.save),
-              onPressed: (context) async => await LoginService().restart(),
+              onPressed: (context) async {
+                await LoginService().restart();
+                await UDPService().init();
+              },
             ),
           ],
         ),

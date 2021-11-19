@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/model/games/common.dart';
 import 'package:mobile/model/games/jeopardy.dart';
 import 'package:mobile/services/login.dart';
+import 'package:mobile/services/udp.dart';
 import 'package:mobile/services/websocket.dart';
 import 'package:mobile/view/misc.dart';
 
@@ -15,6 +16,7 @@ class JeopardyGamePage extends GamePage {
       : super(game: game, wsController: wsController);
 
   void onButtonClick() {
+    UDPService().send(LoginService().getLoginData()?.playerId ?? 0);
     this.wsController.send(
         "button_click",
         {
@@ -24,34 +26,40 @@ class JeopardyGamePage extends GamePage {
   }
 
   Widget _finalBetsForm() {
-    return SingleFieldForm(
-      label: "Place your bet",
-      type: SingleFieldFormType.UNSIGNED_INT,
-      callback: (value) {
-        this.wsController.send(
-            "final_bet",
-            {
-              "player_id": LoginService().getLoginData()?.playerId,
-              "bet": int.parse(value)
-            }
-        );
-      },
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+      child: SingleFieldForm(
+        label: "Place your bet",
+        type: SingleFieldFormType.UNSIGNED_INT,
+        callback: (value) {
+          this.wsController.send(
+              "final_bet",
+              {
+                "player_id": LoginService().getLoginData()?.playerId,
+                "bet": int.parse(value)
+              }
+          );
+        },
+      ),
     );
   }
 
   Widget _finalAnswerForm() {
-    return SingleFieldForm(
-      label: "Answer",
-      type: SingleFieldFormType.TEXT,
-      callback: (value) {
-        this.wsController.send(
-            "final_answer",
-            {
-              "player_id": LoginService().getLoginData()?.playerId,
-              "answer": value
-            }
-        );
-      },
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+      child: SingleFieldForm(
+        label: "Answer",
+        type: SingleFieldFormType.TEXT,
+        callback: (value) {
+          this.wsController.send(
+              "final_answer",
+              {
+                "player_id": LoginService().getLoginData()?.playerId,
+                "answer": value
+              }
+          );
+        },
+      )
     );
   }
 
@@ -63,6 +71,16 @@ class JeopardyGamePage extends GamePage {
       case JeopardyGame.STATE_WAITING_FOR_PLAYERS:
         return Center(
           child: Icon(Icons.pending_rounded, size: 80),
+        );
+      case JeopardyGame.STATE_ROUND:
+      case JeopardyGame.STATE_ROUND_THEMES:
+      case JeopardyGame.STATE_QUESTIONS:
+      case JeopardyGame.STATE_QUESTION_EVENT:
+      case JeopardyGame.STATE_QUESTION_END:
+      case JeopardyGame.STATE_FINAL_THEMES:
+      case JeopardyGame.STATE_FINAL_QUESTION:
+        return Center(
+          child: Text(currentPlayer.balance.toString(), style: TextStyle(fontSize: 28)),
         );
       case JeopardyGame.STATE_QUESTION:
       case JeopardyGame.STATE_ANSWER:
