@@ -10,14 +10,14 @@ class JeopardyQuestion {
   late final String customTheme;
 
   late final String text;
-  late final String image;
-  late final String audio;
-  late final String video;
+  late final String? image;
+  late final String? audio;
+  late final String? video;
 
-  late final String answerText;
-  late final String answerImage;
-  late final String answerAudio;
-  late final String answerVideo;
+  late final String? answerText;
+  late final String? answerImage;
+  late final String? answerAudio;
+  late final String? answerVideo;
 
   late final int value;
   late final String answer;
@@ -58,7 +58,6 @@ class JeopardyTheme {
     this.id = json["id"];
     this.name = json["name"];
     this.isRemoved = json["is_removed"];
-    this.isRemoved = json["final_bet"];
     this.questions = [for (var value in json["questions"]) JeopardyQuestion(value)];
   }
 }

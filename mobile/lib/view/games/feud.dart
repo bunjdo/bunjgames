@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/model/games/common.dart';
 import 'package:mobile/model/games/feud.dart';
 import 'package:mobile/services/login.dart';
+import 'package:mobile/services/udp.dart';
 import 'package:mobile/services/websocket.dart';
 
 import 'common.dart';
@@ -13,6 +14,7 @@ class FeudGamePage extends GamePage {
       : super(game: game, wsController: wsController);
 
   void onButtonClick() {
+    UDPService().send(LoginService().getLoginData()?.playerId ?? 0);
     this.wsController.send(
         "button_click",
         {
@@ -36,7 +38,7 @@ class FeudGamePage extends GamePage {
           ),
         );
       case FeudGame.STATE_END:
-        Center(
+        return Center(
           child: IconButton(
             icon: Icon(Icons.exit_to_app, size: 80),
             onPressed: () {

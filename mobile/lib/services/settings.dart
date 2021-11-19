@@ -6,7 +6,8 @@ enum SettingsType {
   WS_URL,
 
   USE_UDP_IP,
-  UDP_IP
+  UDP_IP,
+  UDP_PORT,
 }
 
 extension SettingsTypeExtension on SettingsType {
@@ -20,6 +21,8 @@ extension SettingsTypeExtension on SettingsType {
         return true;
       case SettingsType.UDP_IP:
         return 'auto';
+      case SettingsType.UDP_PORT:
+        return 9009;
     }
   }
 }
@@ -53,6 +56,14 @@ class SettingsService {
 
   Future<void> setBool(SettingsType type, bool value) async {
     await _sharedPreferences.setBool(type.toString(), value);
+  }
+
+  int getInt(SettingsType type) {
+    return _sharedPreferences.getInt(type.toString()) ?? type.defaultValue;
+  }
+
+  Future<void> setInt(SettingsType type, int value) async {
+    await _sharedPreferences.setInt(type.toString(), value);
   }
 
 }

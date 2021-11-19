@@ -106,8 +106,10 @@ class LoginService {
     } else {
       try {
         var responseJson = jsonDecode(response.body) as Map<String, dynamic>;
+        await this._setLoginData(null);
         throw LoginException(responseJson['detail']);
       } catch (exception) {
+        await this._setLoginData(null);
         throw LoginException('Error while login in');
       }
     }
@@ -115,6 +117,14 @@ class LoginService {
 
   Future<void> logout() async {
     await this._setLoginData(null);
+  }
+
+  Future<void> restart() async {
+    if (this._loginData != null) {
+      await this.login(this._loginData!.game, this._loginData!.name, this._loginData!.token);
+    } else {
+      this._streamController.add(null);
+    }
   }
 
   Stream<LoginData?> getStream() {

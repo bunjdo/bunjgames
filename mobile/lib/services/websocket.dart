@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:mobile/model/games/common.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 import 'settings.dart';
 
 class WebSocketController {
@@ -11,7 +11,7 @@ class WebSocketController {
   StreamController<WsMessage> _streamController = new StreamController.broadcast(sync: true);
   final VoidCallback _onError;
   late final String _url;
-  late WebSocket _channel;
+  WebSocketChannel? _channel;
   final SettingsService settings;
 
   WebSocketController(String game, String token, this._onError, this.settings) {
@@ -20,19 +20,17 @@ class WebSocketController {
     this._init();
   }
 
-  _init() async {
+  _init() {
     print("WS CONNECTING...");
     try {
-      this._channel = await WebSocket.connect(this._url);
+      this._channel = WebSocketChannel.connect(Uri.parse(this._url));
       print("WS CONNECTED");
     } catch  (e) {
       print("WS CONNECTION ERROR");
       this._onError();
     }
 
-    this._channel.done.then((dynamic _) => this._init());
-
-    this._channel.listen((payload) {
+    this._channel!.stream.listen((payload) {
       WsMessage message = WsMessage(jsonDecode(payload));
       _streamController.add(message);
     }, onDone: () {
@@ -46,7 +44,7 @@ class WebSocketController {
   }
 
   void send(String method, Map<String, dynamic> params) {
-    this._channel.add(jsonEncode({
+    this._channel?.sink.add(jsonEncode({
       "method": method,
       "params": params
     }));
@@ -57,7 +55,7 @@ class WebSocketController {
   }
 
   close() async {
-    await this._channel.close();
+    await this._channel?.sink.close();
     await this._streamController.close();
   }
 

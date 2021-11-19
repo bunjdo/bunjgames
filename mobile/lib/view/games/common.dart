@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/model/games/feud.dart';
 import 'package:mobile/model/games/jeopardy.dart';
@@ -8,58 +10,74 @@ import 'package:mobile/services/login.dart';
 import 'package:mobile/services/settings.dart';
 import 'package:mobile/services/websocket.dart';
 import 'package:mobile/styles.dart';
+import 'package:mobile/view/games/weakest.dart';
 import 'package:mobile/view/loading.dart';
 import 'package:mobile/view/settings.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'feud.dart';
+import 'jeopardy.dart';
 
 
-class WebSocketWrapper extends StatefulWidget {
+class GameWrapper extends StatefulWidget {
   final LoginData loginData;
 
-  const WebSocketWrapper({required this.loginData});
+  const GameWrapper({required this.loginData});
 
   @override
-  WebSocketWrapperState createState() => WebSocketWrapperState();
+  GameWrapperState createState() => GameWrapperState();
 }
 
-class WebSocketWrapperState extends State<WebSocketWrapper> {
-  late final LoginData loginData;
-  late final WebSocketController wsController;
+class GameWrapperState extends State<GameWrapper> {
+  Game? game;
+  WebSocketController? wsController;
+  StreamSubscription<WsMessage>? subscription;
 
   @override
   void initState() {
     super.initState();
-    this.loginData = widget.loginData;
     SettingsService.getInstance().then((settings) {
       this.wsController = WebSocketController(
-          loginData.game,
-          loginData.token,
-          () async => await LoginService().logout(),
+          widget.loginData.game,
+          widget.loginData.token,
+              () async => await LoginService().logout(),
           settings
       );
-      this.wsController.getStream().forEach((message) {
-        if (message.type == 'game') {
-          this.onGame(message.message);
+      subscription = this.wsController?.getStream().listen((message) {
+        switch (message.type) {
+          case WsMessage.TYPE_GAME:
+            setState(() {
+              this.game = message.message;
+            });
+            break;
+          case WsMessage.TYPE_ERROR:
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(message.message.toString()))
+            );
         }
       });
     });
   }
 
-  void onGame(Game game) {
-    setState(() {
-      this.game = game;
-    });
+  void dispose() {
+    subscription?.cancel();
+    super.dispose();
   }
-
-  Game? game;
 
   @override
   Widget build(BuildContext context) {
-    return this.game == null
-        ? LoadingPage() : GamePage.createGamePage(this.game!, wsController);
+    return this.game == null || wsController == null
+        ? LoadingPage() : this._buildGamePage();
   }
 
+  Widget _buildGamePage() {
+    switch(game!.name) {
+      case Game.FEUD: return FeudGamePage(game as FeudGame, wsController!);
+      case Game.JEOPARDY: return JeopardyGamePage(game as JeopardyGame, wsController!);
+      case Game.WEAKEST: return WeakestGamePage(game as WeakestGame, wsController!);
+      default: return NotImplementedGamePage(game!, wsController!);
+    }
+  }
 }
 
 
@@ -68,15 +86,6 @@ abstract class GamePage extends StatelessWidget {
   final WebSocketController wsController;
 
   const GamePage({required this.game, required this.wsController});
-
-  static createGamePage(Game game, WebSocketController wsController) {
-    switch(game.name) {
-      case Game.FEUD: return FeudGamePage(game as FeudGame, wsController);
-      case Game.JEOPARDY: return null;
-      case Game.WEAKEST: return null;
-      default: return NotImplementedGamePage(game, wsController);
-    }
-  }
 }
 
 
@@ -105,16 +114,11 @@ class MainDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: Container(
-        color: baseBackground,
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
             Container(
-              height: Scaffold.of(context).appBarMaxHeight,
               child: DrawerHeader(
-                decoration: BoxDecoration(
-                  color: baseBackgroundDark,
-                ),
                 child: Row(
                   children: [
                     Icon(Icons.settings),
@@ -123,6 +127,21 @@ class MainDrawer extends StatelessWidget {
                   ],
                 ),
               ),
+            ),
+            ListTile(
+              title: Text('Main site'),
+              onTap: () async {
+                const url = 'https://games.bunj.app';
+                if (await canLaunch(url)) {
+                  await launch(url);
+                } else {
+                  throw 'Could not launch $url';
+                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
+              },
             ),
             ListTile(
               title: Text('Settings'),
@@ -169,16 +188,11 @@ class PlayersDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: Container(
-        color: baseBackground,
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
             Container(
-              height: Scaffold.of(context).appBarMaxHeight,
               child: DrawerHeader(
-                decoration: BoxDecoration(
-                  color: baseBackgroundDark,
-                ),
                 child: Row(
                   children: [
                     Icon(Icons.account_box),
@@ -219,7 +233,7 @@ class ButtonWidget extends StatelessWidget {
           padding: EdgeInsets.all(16),
           shape: CircleBorder(),
           onPressed: this.onPressed,
-          child: Text(this.text),
+          child: Text(this.text, style: TextStyle(color: buttonTextColor, fontSize: 80),),
         ),
       ),
     );

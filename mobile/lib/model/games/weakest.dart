@@ -13,7 +13,7 @@ class WeakestQuestion {
 
 
 class WeakestQuestionInfo {
-  late final bool isCorrect;
+  late final bool? isCorrect;
   late final bool isProcessed;
 
   WeakestQuestionInfo(Map<String, dynamic> json) {

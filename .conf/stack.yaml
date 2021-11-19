@@ -1,5 +1,6 @@
 version: '3.0'
 services:
+
   client:
     image: &client bunjdo/bunjgames-client:latest
     environment:
@@ -8,6 +9,7 @@ services:
     ports:
       - 8080:80
     restart: always
+
   server:
     image: &server bunjdo/bunjgames-server:latest
     command: daphne -b 0.0.0.0 -p 80 server.asgi:application
@@ -20,7 +22,7 @@ services:
       - 8000:80
     depends_on:
       - db
-    restart: always
+
   celery:
     image: *server
     command: celery -A server worker -E -B --loglevel=INFO
@@ -28,20 +30,20 @@ services:
     depends_on:
       - db
       - redis
-    restart: always
+
   redis:
     image: redis:6.2
-    restart: always
+
   migrations:
     image: *server
     command: python manage.py migrate
     environment: *server_environment
     depends_on:
       - db
-    restart: 'no'
     deploy:
       restart_policy:
         condition: none
+
   db:
     image: postgres:13.0
     volumes:
@@ -49,7 +51,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=bunjgames
-    restart: always
 
 volumes:
   bunjgames-db-data:
+
