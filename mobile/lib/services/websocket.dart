@@ -35,7 +35,7 @@ class WebSocketController {
       _streamController.add(message);
     }, onDone: () {
       print("WS DISCONNECTED");
-      this._init();
+      Future.delayed(Duration(seconds: 5)).then((value) => this._init());
     }, onError: (e) {
       print('WS ERROR: $e');
       this._onError();
