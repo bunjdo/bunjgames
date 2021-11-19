@@ -135,7 +135,7 @@ class BroadcastProtocol(asyncio.DatagramProtocol):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--version', action='version', version='v0.2.0')
+    parser.add_argument('--version', action='version', version='v0.3.0')
 
     parser.add_argument("--game", help="game type", type=str)
     parser.add_argument("--token", help="game token", type=str)
