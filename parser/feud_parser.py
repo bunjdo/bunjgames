@@ -1,11 +1,12 @@
 import datetime
-
+import random
 from bs4 import BeautifulSoup
 import requests
 import re
 import traceback
 import json
 from lxml import etree
+from collections import OrderedDict
 
 
 class _Getch:
@@ -126,7 +127,7 @@ def create_games_from_json(path):
 
             answers_for_print = [f'{answer[0]}: {answer[1]}' for answer in norm_answers]
             print(f'{question}: {", ".join(answers_for_print)}')
-            print('y - Accept\nd - Decline and remove\nany other key - Decline but keep\nEnter command:')
+            print('y - Accept\nd - Decline and remove\nq - Exit\nany other key - Decline but keep\nEnter command:')
             char = getch()
             if char == 'y':
                 if len(questions_xml) < 4:
@@ -136,6 +137,8 @@ def create_games_from_json(path):
                 _data_to_remove[question] = _data[question]
             elif char == 'd':
                 _data_to_remove[question] = _data[question]
+            elif char == 'q':
+                return False
             else:
                 pass
 
@@ -149,24 +152,25 @@ def create_games_from_json(path):
                 f.write(content.decode("utf-8"))
                 f.close()
                 all(map(_data.pop, _data_to_remove))
-                return
+                return True
 
-    with open(path) as json_file:
+    with open(path, 'r+') as json_file:
         data = json.load(json_file)
-        while data:
-            process_game_pack(data)
-        json.dump(data, path, ensure_ascii=False)
+        is_continue = True
+        while is_continue and data:
+            is_continue = process_game_pack(data)
+        json.dump(data, json_file, ensure_ascii=False)
 
 
 def parse():
     questions = parse_100k1_biniko_com()
+    items = list(questions.items())
+    random.shuffle(items)
+    questions = OrderedDict(items)
     with open('parsed_data/100k1_biniko_com.json', 'w', encoding="utf-8") as file:
         json.dump(questions, file, ensure_ascii=False)
 
 
-def process():
-    create_games_from_json('parsed_data/100k1_biniko_com.json')
-
-
 if __name__ == '__main__':
-    process()
+    # parse()
+    create_games_from_json('parsed_data/100k1_biniko_com.json')

@@ -257,6 +257,10 @@ class Game(models.Model):
         elif self.state == self.STATE_ROUND:
             if self.is_final_round():
                 self.state = self.STATE_FINAL_THEMES
+                filtered_themes = self.get_themes().filter(is_removed=False)
+                if filtered_themes.count() == 1:
+                    self.state = self.STATE_FINAL_BETS
+                    self.question = filtered_themes.get().questions.get()
             else:
                 self.state = self.STATE_ROUND_THEMES
         elif self.state == self.STATE_ROUND_THEMES:

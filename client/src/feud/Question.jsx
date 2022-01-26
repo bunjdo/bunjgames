@@ -7,7 +7,7 @@ const Question = ({game, showHiddenAnswers, className, onSelect}) => {
     const answers = [];
     let strikesContainersCount = 0;
     game.question.answers.forEach((answer, index) => {
-        let isAnswerOpened = (game.state !== "final_questions") ? answer.is_opened : answer.is_final_answered
+        let isAnswerOpened = (game.state !== "final_questions") ? answer.is_opened : showHiddenAnswers && answer.is_final_answered
         answers.push(
             <div key={'answer_' + index}
                  onClick={() => !isAnswerOpened && onSelect(answer.id)}

@@ -59,7 +59,7 @@ const useStateContent = (game) => {
         case "final_questions_reveal":
             return <FinalQuestions game={game} className={styles.question}/>;
         case "end":
-            return <TextContent>{answerer.score > 200 ? "Victory" : "Defeat"}</TextContent>;
+            return <TextContent>{answerer.final_score > 200 ? "Victory" : "Defeat"}: {answerer.final_score}</TextContent>;
         default:
             return <TextContent>Friends Feud</TextContent>
     }

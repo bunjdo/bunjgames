@@ -240,7 +240,7 @@ class Game(models.Model):
                 self.intercom('right')
             if self.state == self.STATE_ANSWERS:
                 if opponent.strikes >= 3 or self.question.answers.filter(is_opened=False).count() == 0:
-                    answerer.score += self.question.answers.filter(is_opened=True).aggregate(sum=Sum('value'))['sum']
+                    answerer.score += self.question.answers.filter(is_opened=True).aggregate(sum=Sum('value'))['sum'] or 0
                     answerer.save()
                     self.state = self.STATE_ANSWERS_REVEAL
                 self.intercom('right')
@@ -258,7 +258,7 @@ class Game(models.Model):
             answerer.save()
 
             if opponent.strikes >= 3:
-                opponent.score += self.question.answers.filter(is_opened=True).aggregate(sum=Sum('value'))['sum']
+                opponent.score += self.question.answers.filter(is_opened=True).aggregate(sum=Sum('value'))['sum'] or 0
                 opponent.save()
                 self.state = self.STATE_ANSWERS_REVEAL
             elif answerer.strikes >= 3:
