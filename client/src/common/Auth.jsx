@@ -86,7 +86,7 @@ const RegisterPlayerForm = ({api, setConnected}) => {
     const [loading, setLoading] = useState(false);
     const query = useQuery();
     const [token, setToken] = useState(query.get('token') || "");
-    const [name, setName] = useState("");
+    const [name, setName] = useState(api.getSavedUsername());
 
     const onSubmit = () => {
         if (!token || !name) {
@@ -98,6 +98,7 @@ const RegisterPlayerForm = ({api, setConnected}) => {
 
         api.registerPlayer(token, name).then(() => {
             api.connect().then(() => {
+                api.setSavedUsername(name.trim())
                 setConnected(true);
             })
         }).catch((e) => {
@@ -144,13 +145,14 @@ const AdminAuth = ({api, setConnected}) => {
 
 const PlayerAuth = ({api, setConnected}) => {
     const [loading, setLoading] = useState(true);
+    const query = useQuery();
 
     const checkGame = (game) => {
         return !game.players || !api.playerId || game.players.find(p => p.id === api.playerId)
     }
 
     useEffect(() => {
-        if(api.hasToken() && api.hasPlayerId()) {
+        if(api.hasToken() && api.hasPlayerId() && query.get('token')) {
             api.connect(api.token, checkGame).then(() => {
                 setConnected(true);
             }).catch(() => {

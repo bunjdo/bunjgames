@@ -147,6 +147,18 @@ export default class GameApi {
         return Boolean(this.token);
     }
 
+    setSavedUsername(username) {
+        localStorage.setItem("username", JSON.stringify(username));
+    }
+
+    getSavedUsername() {
+        try {
+            return JSON.parse(localStorage.getItem("username"));
+        } catch (e) {
+            return null;
+        }
+    }
+
     logout() {
         this.saveToken(null);
         this.game = undefined;
