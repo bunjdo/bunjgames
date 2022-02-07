@@ -32,6 +32,7 @@
 .player {
   background-color: $baseBackgroundButton !important;
   min-width: 150px;
+  padding: 8px;
 
   &.selected {
     background-color: $baseBackgroundSelect !important;
@@ -43,6 +44,16 @@
     &:active {
       transform: translateY(5px);
     }
+  }
+}
+
+.padding {
+  padding: 8px;
+}
+
+.players {
+  >:not(:last-child) {
+    margin-bottom: 8px;
   }
 }
 
