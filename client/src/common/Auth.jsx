@@ -152,7 +152,7 @@ const PlayerAuth = ({api, setConnected}) => {
     }
 
     useEffect(() => {
-        if(api.hasToken() && api.hasPlayerId() && query.get('token')) {
+        if(api.hasToken() && api.hasPlayerId() && !query.get('token')) {
             api.connect(api.token, checkGame).then(() => {
                 setConnected(true);
             }).catch(() => {
