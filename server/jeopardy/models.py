@@ -140,9 +140,9 @@ class Game(models.Model):
             last_round = i + 1
             for theme in round.find(namespace + 'themes').findall(namespace + 'theme'):
                 theme_name = theme.get('name')
-                theme_model = Theme.objects.create(name=theme_name, round=i+1, game=self)
                 if theme.find(namespace + 'questions') is None:
                     continue
+                theme_model = Theme.objects.create(name=theme_name, round=i+1, game=self)
                 for question in theme.find(namespace + 'questions').findall(namespace + 'question')[:8]:
                     question_price = question.get('price')
                     type = Question.TYPE_STANDARD

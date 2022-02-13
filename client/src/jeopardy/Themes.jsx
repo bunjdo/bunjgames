@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import styles from "./Themes.scss";
 
 const Theme = ({theme, onSelect, active = false}) => (
@@ -23,7 +23,7 @@ const ThemesList = ({game, onSelect, active = false}) => (
 
 const ThemesGrid = ({game}) => (
     <div className={styles.themesGrid}>
-        {game.themes.map((theme, index) => <Theme key={index} theme={theme}/>)}
+        {game.themes.slice(0, game.themes.length - (game.themes.length % 3)).map((theme, index) => <Theme key={index} theme={theme}/>)}
     </div>
 );
 
@@ -43,7 +43,7 @@ const QuestionsGrid = ({game, selectedId, onSelect}) => {
         );
     });
 
-    return <div className={styles.questionsGrid} style={{gridTemplateColumns: `2fr repeat(${maxQuestions}, 1fr)`}}>
+    return <div className={styles.questionsGrid} style={{gridTemplateColumns: `minmax(0, 3fr) repeat(${maxQuestions}, minmax(0, 1fr))`}}>
         {items}
     </div>
 };
