@@ -43,7 +43,7 @@ const QuestionsGrid = ({game, selectedId, onSelect}) => {
         );
     });
 
-    return <div className={styles.questionsGrid} style={{gridTemplateColumns: `minmax(0, 3fr) repeat(${maxQuestions}, minmax(0, 1fr))`}}>
+    return <div className={styles.questionsGrid} style={{gridTemplateColumns: `minmax(0, 5fr) repeat(${maxQuestions}, minmax(0, 2fr))`}}>
         {items}
     </div>
 };
