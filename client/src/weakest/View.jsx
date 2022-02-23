@@ -4,6 +4,7 @@ import {AdminAuth} from "common/Auth";
 import {Content, GameView, TextContent, BlockContent, ExitButton, QRCodeContent} from "common/View";
 import {useHistory} from "react-router-dom";
 import FinalQuestions from "weakest/FinalQuestions";
+import {generateClientUrl} from "../common/View";
 
 const Music = {
     intro: HowlWrapper('/sounds/weakest/intro.mp3'),
@@ -52,7 +53,7 @@ const MFinalQuestions = ({game}) => {
 const useStateContent = (game) => {
     switch (game.state) {
         case "waiting_for_players":
-            return <QRCodeContent value={'https://games.bunj.app/weakest/client?token=' + game.token}>
+            return <QRCodeContent value={generateClientUrl('/weakest/client?token=' + game.token)}>
                 {game.token}
             </QRCodeContent>;
         case "round":

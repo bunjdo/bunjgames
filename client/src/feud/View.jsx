@@ -5,6 +5,7 @@ import {Content, ExitButton, GameView, TextContent, QRCodeContent} from "common/
 import {FinalQuestions, Question} from "feud/Question";
 import styles from "feud/View.scss";
 import {useHistory} from "react-router-dom";
+import {generateClientUrl} from "../common/View";
 
 const Music = {
     intro: HowlWrapper('/sounds/feud/intro.mp3', false, 0.5),
@@ -42,7 +43,7 @@ const useStateContent = (game) => {
     const answerer = game.answerer && game.players.find(t => t.id === game.answerer);
     switch (game.state) {
         case "waiting_for_players":
-            return <QRCodeContent value={'https://games.bunj.app/feud/client?token=' + game.token}>
+            return <QRCodeContent value={generateClientUrl('/feud/client?token=' + game.token)}>
                 {game.token}
             </QRCodeContent>;
         case "round":

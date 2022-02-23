@@ -8,6 +8,7 @@ import {getRoundName, getTypeName} from "jeopardy/Common";
 import {Content, ExitButton, GameView, TextContent, QRCodeContent} from "common/View";
 import styles from "jeopardy/View.scss";
 import {useHistory} from "react-router-dom";
+import {generateClientUrl} from "../common/View";
 
 
 const Music = {
@@ -49,7 +50,7 @@ const useStateContent = (game) => {
 
     switch (game.state) {
         case "waiting_for_players":
-            return <QRCodeContent value={'https://games.bunj.app/jeopardy/client?token=' + game.token}>
+            return <QRCodeContent value={generateClientUrl('/jeopardy/client?token=' + game.token)}>
                 {game.token}
             </QRCodeContent>;
         case "themes_all":

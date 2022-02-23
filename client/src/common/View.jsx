@@ -20,6 +20,10 @@ const TextContent = ({className, children}) => (
     </div>
 );
 
+const generateClientUrl = (path) => {
+    return location.protocol + '//' + location.host + path;
+}
+
 const QRCodeContent = ({className, children, value}) => (
     <div className={css(styles.text, className)}>
         <p>{children}</p>
@@ -53,4 +57,5 @@ export {
     BlockContent,
     Content,
     GameView,
+    generateClientUrl,
 }
