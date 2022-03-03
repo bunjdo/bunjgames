@@ -11,6 +11,9 @@ export default class GameApi {
         });
 
         this.wsEndpoint = wsEndpoint;
+        if (!wsEndpoint.startsWith("ws://") && !wsEndpoint.startsWith("wss://")) {
+            this.wsEndpoint = ((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host + wsEndpoint;
+        }
         this.gameSubscriber = new Subscriber();
         this.stateSubscriber = new Subscriber();
         this.intercomSubscriber = new Subscriber();

@@ -24,7 +24,7 @@ import FeudClient from "./feud/Client.jsx";
 require("./Polyfils.js");
 
 window.BunjGamesConfig = {
-    MEDIA: API_ENDPOINT + "media/",
+    MEDIA: MEDIA_ENDPOINT,
 
     COMMON_API_ENDPOINT: API_ENDPOINT + "common/",
 
