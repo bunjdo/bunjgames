@@ -12,7 +12,7 @@ from django.db import transaction
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from common.utils import unzip, BadStateException, BadFormatException
+from common.utils import unzip, BadStateException, BadFormatException, game_assets_post_process
 from jeopardy.models import Game, Player
 from jeopardy.serializers import GameSerializer
 
@@ -31,12 +31,14 @@ class CreateGameAPI(APIView):
         path = default_storage.save(os.path.join('jeopardy', game.token, 'game'), ContentFile(data.read()))
         file = os.path.join(settings.MEDIA_ROOT, path)
         try:
-            unzip(file, os.path.join(settings.MEDIA_ROOT_JEOPARDY, game.token))
+            game_path = os.path.join(settings.MEDIA_ROOT_JEOPARDY, game.token)
+            unzip(file, game_path)
+            transform_dict = game_assets_post_process(game_path)
         finally:
             os.remove(file)
 
         try:
-            game.parse(os.path.join(settings.MEDIA_ROOT_JEOPARDY, game.token, 'content.xml'))
+            game.parse(os.path.join(settings.MEDIA_ROOT_JEOPARDY, game.token, 'content.xml'), transform_dict)
             os.remove(os.path.join(settings.MEDIA_ROOT_JEOPARDY, game.token, 'content.xml'))
         except Exception as e:
             shutil.rmtree(os.path.join(settings.MEDIA_ROOT_JEOPARDY, game.token), ignore_errors=True)

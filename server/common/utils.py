@@ -1,8 +1,13 @@
+import hashlib
 import os
 import shutil
 import string
+import traceback
+import typing
 import zipfile
+from pathlib import Path
 from urllib.parse import unquote
+from pydub import AudioSegment
 
 from rest_framework.exceptions import APIException
 from django.conf import settings
@@ -42,3 +47,35 @@ hashids = Hashids(salt=settings.SECRET_KEY, min_length=6, alphabet=string.ascii_
 
 def generate_token(id):
     return hashids.encode(id)
+
+
+def game_assets_post_process(parent: str) -> typing.Dict[str, str]:
+    if not settings.GAME_ASSETS_POST_PROCESS:
+        return {}
+
+    path_list = Path(parent).rglob('*.*')
+    transform_dict = {}
+
+    for path in filter(lambda p: str(p).endswith((".mp3", ".wav", ".flac", ".ogg", ".opus")), path_list):
+        path_str = str(path)
+        m = hashlib.sha256()
+        m.update(path_str.encode())
+        target_filename = m.hexdigest() + ".mp3"
+        target_path = os.path.join(parent, target_filename)
+
+        try:
+            audio = AudioSegment.from_file(path_str)
+
+            gain = audio.dBFS - (-14)
+            audio = audio.remove_dc_offset()
+            audio = audio.apply_gain(-gain)
+            audio = audio.compress_dynamic_range()
+            audio.export(target_path, format="mp3")
+
+            path.unlink()
+        except Exception:
+            traceback.print_exc()
+        finally:
+            transform_dict[os.path.relpath(path_str, parent)] = target_filename
+
+    return transform_dict

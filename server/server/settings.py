@@ -138,3 +138,4 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 JEOPARDY_IS_POST_EVENT_REQUIRED = False
+GAME_ASSETS_POST_PROCESS = os.environ.get('GAME_ASSETS_POST_PROCESS', 'true').lower() == 'true',

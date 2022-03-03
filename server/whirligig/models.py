@@ -137,11 +137,17 @@ class Game(models.Model):
         self.save()
 
     @transaction.atomic(savepoint=False)
-    def parse(self, filename):
+    def parse(self, filename, transform_dict=None):
+        if transform_dict is None:
+            transform_dict = {}
+
         tree = ElementTree.parse(filename)
 
         game_xml = tree.getroot()
         items_xml = game_xml.find('items')
+
+        def format_audio_url(url: str):
+            return '/' + transform_dict[url[1:]] if url and url.startswith('/') and url[1:] in transform_dict else url
 
         for item_number, item_xml in enumerate(items_xml.findall('item')):
             if item_number >= 13:
@@ -163,13 +169,13 @@ class Game(models.Model):
                     description=question_xml.find('description').text,
                     text=question_xml.find('text').text,
                     image=question_xml.find('image').text,
-                    audio=question_xml.find('audio').text,
+                    audio=format_audio_url(question_xml.find('audio').text),
                     video=question_xml.find('video').text,
 
                     answer_description=answer_xml.find('description').text,
                     answer_text=answer_xml.find('text').text,
                     answer_image=answer_xml.find('image').text,
-                    answer_audio=answer_xml.find('audio').text,
+                    answer_audio=format_audio_url(answer_xml.find('audio').text),
                     answer_video=answer_xml.find('video').text,
                 )
 

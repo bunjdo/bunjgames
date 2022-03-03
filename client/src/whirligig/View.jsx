@@ -29,10 +29,10 @@ const Music = {
 }
 
 const Sounds = {
-    sig1: HowlWrapper('/sounds/whirligig/sig1.ogg'),
-    sig2: HowlWrapper('/sounds/whirligig/sig2.ogg'),
-    sig3: HowlWrapper('/sounds/whirligig/sig3.ogg'),
-    gong: HowlWrapper('/sounds/whirligig/gong.ogg'),
+    sig1: HowlWrapper('/sounds/whirligig/sig1.mp3'),
+    sig2: HowlWrapper('/sounds/whirligig/sig2.mp3'),
+    sig3: HowlWrapper('/sounds/whirligig/sig3.mp3'),
+    gong: HowlWrapper('/sounds/whirligig/gong.mp3'),
 }
 
 const loadSounds = () => {

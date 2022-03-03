@@ -113,7 +113,10 @@ class Game(models.Model):
         return game
 
     @transaction.atomic(savepoint=False)
-    def parse(self, filename):
+    def parse(self, filename, transform_dict=None):
+        if transform_dict is None:
+            transform_dict = {}
+
         tree = ElementTree.parse(filename)
         root = tree.getroot()
 
@@ -128,7 +131,10 @@ class Game(models.Model):
 
         def format_audio_url(url: str):
             if url and url.startswith('@'):
-                return '/Audio' + url.replace('@', '/', 1)
+                old_url = 'Audio' + url.replace('@', '/', 1)
+                if old_url in transform_dict:
+                    return '/' + transform_dict[old_url]
+                return '/' + old_url
             return url
 
         def format_video_url(url: str):

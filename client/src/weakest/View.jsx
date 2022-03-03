@@ -8,15 +8,15 @@ import {generateClientUrl} from "../common/View";
 
 const Music = {
     intro: HowlWrapper('/sounds/weakest/intro.mp3'),
-    background: HowlWrapper('/sounds/weakest/background.ogg', true, 0.5),
-    questions: HowlWrapper('/sounds/weakest/questions.ogg', true, 0.5),
+    background: HowlWrapper('/sounds/weakest/background.mp3'),
+    questions: HowlWrapper('/sounds/weakest/questions.mp3'),
 }
 
 const Sounds = {
-    gong: HowlWrapper('/sounds/weakest/gong.ogg'),
-    question_start: HowlWrapper('/sounds/weakest/question_start.ogg'),
-    question_end: HowlWrapper('/sounds/weakest/question_end.ogg'),
-    weakest_reveal: HowlWrapper('/sounds/weakest/weakest_reveal.mp3', false, 0.5),
+    gong: HowlWrapper('/sounds/weakest/gong.mp3'),
+    question_start: HowlWrapper('/sounds/weakest/question_start.mp3'),
+    question_end: HowlWrapper('/sounds/weakest/question_end.mp3'),
+    weakest_reveal: HowlWrapper('/sounds/weakest/weakest_reveal.mp3'),
 }
 
 const loadSounds = () => {

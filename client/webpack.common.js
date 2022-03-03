@@ -52,7 +52,7 @@ module.exports = {
   },
   plugins:[
     new webpack.DefinePlugin({
-      MEDIA_ENDPOINT: JSON.stringify(process.env.REACT_APP_API_ENDPOINT || "/media/"),
+      MEDIA_ENDPOINT: JSON.stringify(process.env.REACT_APP_MEDIA_ENDPOINT || "/media/"),
       API_ENDPOINT: JSON.stringify(process.env.REACT_APP_API_ENDPOINT || "/api/"),
       WS_ENDPOINT: JSON.stringify(process.env.REACT_APP_WS_ENDPOINT || "/ws/"),
     }),

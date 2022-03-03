@@ -8,11 +8,11 @@ import {useHistory} from "react-router-dom";
 import {generateClientUrl} from "../common/View";
 
 const Music = {
-    intro: HowlWrapper('/sounds/feud/intro.mp3', false, 0.5),
-    round: HowlWrapper('/sounds/feud/round.mp3', false, 0.5),
-    beat: HowlWrapper('/sounds/feud/beat.mp3', false, 0.5),
-    timer: HowlWrapper('/sounds/feud/timer.mp3', false, 0.5),
-    end: HowlWrapper('/sounds/feud/end.mp3', false, 0.5),
+    intro: HowlWrapper('/sounds/feud/intro.mp3'),
+    round: HowlWrapper('/sounds/feud/round.mp3'),
+    beat: HowlWrapper('/sounds/feud/beat.mp3'),
+    timer: HowlWrapper('/sounds/feud/timer.mp3'),
+    end: HowlWrapper('/sounds/feud/end.mp3'),
 }
 
 const Sounds = {

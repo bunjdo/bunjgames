@@ -1,7 +1,8 @@
 FROM python:3.10-slim
 
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends libpq-dev cron build-essential libffi-dev
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libpq-dev build-essential libffi-dev && \
+    apt-get install -y ffmpeg libavcodec-extra
 
 WORKDIR /app
 
@@ -12,10 +13,6 @@ RUN apt-get purge -y build-essential libffi-dev
 RUN apt-get autoremove -y
 RUN apt-get clean
 RUN apt-get autoclean
-
-COPY cron.conf /etc/cron.d/cron.conf
-RUN chmod 0644 /etc/cron.d/cron.conf
-RUN crontab /etc/cron.d/cron.conf
 
 COPY . /app
 
