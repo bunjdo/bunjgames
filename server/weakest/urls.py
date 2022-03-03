@@ -5,8 +5,8 @@ from weakest import api
 from weakest.consumers import WeakestConsumer
 
 urlpatterns = [
-    path('v1/create', api.CreateGameAPI.as_view()),
-    path('v1/players/register', api.RegisterPlayerAPI.as_view()),
+    path('create', api.CreateGameAPI.as_view()),
+    path('players/register', api.RegisterPlayerAPI.as_view()),
 ]
 
 websocket_urlpatterns = [

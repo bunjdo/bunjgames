@@ -52,8 +52,8 @@ module.exports = {
   },
   plugins:[
     new webpack.DefinePlugin({
-      API_ENDPOINT: JSON.stringify(process.env.REACT_APP_API_ENDPOINT || "https://api.games.bunj.app/"),
-      WS_ENDPOINT: JSON.stringify(process.env.REACT_APP_WS_ENDPOINT || "wss://api.games.bunj.app/"),
+      API_ENDPOINT: JSON.stringify(process.env.REACT_APP_API_ENDPOINT || "/api/"),
+      WS_ENDPOINT: JSON.stringify(process.env.REACT_APP_WS_ENDPOINT || "/ws/"),
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css',

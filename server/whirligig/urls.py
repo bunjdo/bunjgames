@@ -5,7 +5,7 @@ from whirligig import api
 from whirligig.consumers import WhirligigConsumer
 
 urlpatterns = [
-    path('v1/create', api.CreateGameAPI.as_view(), name='create_game'),
+    path('create', api.CreateGameAPI.as_view(), name='create_game'),
 ]
 
 websocket_urlpatterns = [

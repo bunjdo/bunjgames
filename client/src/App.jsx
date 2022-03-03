@@ -26,19 +26,19 @@ require("./Polyfils.js");
 window.BunjGamesConfig = {
     MEDIA: API_ENDPOINT + "media/",
 
-    COMMON_API_ENDPOINT: API_ENDPOINT + "common/v1/",
+    COMMON_API_ENDPOINT: API_ENDPOINT + "common/",
 
-    WHIRLIGIG_API_ENDPOINT: API_ENDPOINT + "whirligig/v1/",
-    WHIRLIGIG_WS_ENDPOINT: WS_ENDPOINT + "whirligig/ws/",
+    WHIRLIGIG_API_ENDPOINT: API_ENDPOINT + "whirligig/",
+    WHIRLIGIG_WS_ENDPOINT: WS_ENDPOINT + "whirligig/",
 
-    JEOPARDY_API_ENDPOINT: API_ENDPOINT + "jeopardy/v1/",
-    JEOPARDY_WS_ENDPOINT: WS_ENDPOINT + "jeopardy/ws/",
+    JEOPARDY_API_ENDPOINT: API_ENDPOINT + "jeopardy/",
+    JEOPARDY_WS_ENDPOINT: WS_ENDPOINT + "jeopardy/",
 
-    WEAKEST_API_ENDPOINT: API_ENDPOINT + "weakest/v1/",
-    WEAKEST_WS_ENDPOINT: WS_ENDPOINT + "weakest/ws/",
+    WEAKEST_API_ENDPOINT: API_ENDPOINT + "weakest/",
+    WEAKEST_WS_ENDPOINT: WS_ENDPOINT + "weakest/",
 
-    FEUD_API_ENDPOINT: API_ENDPOINT + "feud/v1/",
-    FEUD_WS_ENDPOINT: WS_ENDPOINT + "feud/ws/",
+    FEUD_API_ENDPOINT: API_ENDPOINT + "feud/",
+    FEUD_WS_ENDPOINT: WS_ENDPOINT + "feud/",
 };
 
 window.WHIRLIGIG_API = new WhirligigApi(BunjGamesConfig.WHIRLIGIG_API_ENDPOINT, BunjGamesConfig.WHIRLIGIG_WS_ENDPOINT);

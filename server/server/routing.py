@@ -8,9 +8,9 @@ import feud.urls
 
 application = ProtocolTypeRouter({
     'websocket': URLRouter([
-        path('whirligig/ws/', URLRouter(whirligig.urls.websocket_urlpatterns)),
-        path('jeopardy/ws/', URLRouter(jeopardy.urls.websocket_urlpatterns)),
-        path('weakest/ws/', URLRouter(weakest.urls.websocket_urlpatterns)),
-        path('feud/ws/', URLRouter(feud.urls.websocket_urlpatterns)),
+        path('ws/whirligig/', URLRouter(whirligig.urls.websocket_urlpatterns)),
+        path('ws/jeopardy/', URLRouter(jeopardy.urls.websocket_urlpatterns)),
+        path('ws/weakest/', URLRouter(weakest.urls.websocket_urlpatterns)),
+        path('ws/feud/', URLRouter(feud.urls.websocket_urlpatterns)),
     ]),
 })
