@@ -1,10 +1,10 @@
 import React, {useEffect} from "react";
 
-import {AudioPlayer, HowlWrapper, ImagePlayer, VideoPlayer, Loading, useGame, useAuth} from "common/Essentials";
-import {AdminAuth} from "common/Auth";
+import {AudioPlayer, HowlWrapper, ImagePlayer, VideoPlayer, Loading, useGame, useAuth} from "../common/Essentials";
+import {AdminAuth} from "../common/Auth";
 
 import {ThemesList, ThemesGrid, QuestionsGrid} from "jeopardy/Themes";
-import {getRoundName, getTypeName} from "jeopardy/Common";
+import {getRoundName, EventType} from "jeopardy/Common";
 import {Content, ExitButton, GameView, TextContent, QRCodeContent} from "common/View";
 import styles from "jeopardy/View.scss";
 import {useHistory} from "react-router-dom";
@@ -65,7 +65,7 @@ const useStateContent = (game) => {
         case "questions":
             return <QuestionsGrid game={game}/>;
         case "question_event":
-            return <TextContent>{getTypeName(game.question.type)}</TextContent>;
+            return <TextContent><EventType type={game.question.type}/></TextContent>;
         case "question": case "answer": case "final_question": case "final_answer":
             return <QuestionMessage
                 game={game} text={question.text} image={question.image} audio={question.audio} video={question.video}

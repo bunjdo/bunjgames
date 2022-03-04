@@ -1,3 +1,5 @@
+import {FaCat, RiAuctionFill} from "react-icons/all";
+import React from "react";
 
 const getStatusName = (status) => {
     switch (status) {
@@ -38,15 +40,16 @@ const getStatusName = (status) => {
     }
 }
 
-const getTypeName = (status) => {
-    switch (status) {
+const EventType = ({type}) => {
+    switch (type) {
         case 'standard':
-            return "Standard";
+            return <div>Standard</div>;
         case 'auction':
-            return "Auction";
+            return <div>Auction<br/><RiAuctionFill/></div>;
         case 'bagcat':
-            return "Cat in the bag";
+            return <div>Cat in the bag<br/><FaCat/></div>;
     }
+    return <div/>
 }
 
 const getRoundName = (game) => {
@@ -56,4 +59,4 @@ const getRoundName = (game) => {
     return "ROUND " + String(game.round)
 }
 
-export {getStatusName, getTypeName, getRoundName}
+export {getStatusName, EventType, getRoundName}

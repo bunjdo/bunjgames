@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./Themes.scss";
+import {FaCat, RiAuctionFill} from "react-icons/all";
 
 const Theme = ({theme, onSelect, active = false}) => (
     <div className={css(active && styles.active, styles.theme)}
@@ -12,7 +13,11 @@ const Theme = ({theme, onSelect, active = false}) => (
 const Question = ({question, onSelect}) => (
     <div className={css(!question.is_processed && styles.active, styles.question)}
          onClick={() => !question.is_processed && onSelect(question.id)}>
-        <div>{!question.is_processed && question.value}</div>
+        <div>
+            {!question.is_processed && onSelect && question.type === "bagcat" && <FaCat/>}
+            {!question.is_processed && onSelect && question.type === "auction" && <RiAuctionFill/>}
+            {!question.is_processed && question.value}
+        </div>
     </div>
 );
 

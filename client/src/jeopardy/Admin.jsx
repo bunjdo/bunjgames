@@ -15,7 +15,7 @@ import {
 import {BlockContent, Content, Footer, FooterItem, GameAdmin, Header, TextContent} from "common/Admin";
 
 import {ThemesList, ThemesGrid, QuestionsGrid} from "jeopardy/Themes";
-import {getStatusName, getTypeName, getRoundName} from "jeopardy/Common";
+import {getStatusName, EventType, getRoundName} from "jeopardy/Common";
 import styles from "jeopardy/Admin.scss";
 import {FaVolumeMute} from "react-icons/all";
 
@@ -32,7 +32,7 @@ const QuestionEvent = ({question}) => {
     }
     return <BlockContent>
         <div>
-            <div className={styles.type}>{getTypeName(type)}</div>
+            <div className={styles.type}><EventType type={type}/></div>
             {themeDiv}
             <div>Value: {value}</div>
         </div>
