@@ -4,7 +4,7 @@ import styles from "./Themes.scss";
 const Theme = ({theme, onSelect, active = false}) => (
     <div className={css(active && styles.active, styles.theme)}
          onClick={() => !theme.is_removed && onSelect(theme.id)}
-         title={theme.comment ?? ""}>
+         title={theme.name + "\n" + (theme.comment ?? "")}>
         <div>{!theme.is_removed && theme.name}</div>
     </div>
 );
