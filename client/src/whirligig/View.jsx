@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {AudioPlayer, HowlWrapper, ImagePlayer, VideoPlayer, Loading, useGame, useAuth} from "common/Essentials";
 import {AdminAuth} from "common/Auth";
 import Whirligig from "whirligig/Whirligig";
 import styles from "whirligig/View.scss";
 import {Content, ExitButton, GameView, TextContent} from "common/View";
 import {useHistory} from "react-router-dom";
+import {GiMusicalNotes} from "react-icons/all";
 
 
 const QuestionsEndMusic = {
@@ -70,6 +71,7 @@ const QuestionMessage = ({game, text, image, audio, video}) => {
         <div><AudioPlayer controls autoPlay={true} game={game} url={audio}/></div>}
         {["question_start", "right_answer"].includes(game.state) && video &&
         <div><VideoPlayer controls autoPlay={true} game={game} url={video}/></div>}
+        {!text && !image && !video && audio && <p style={{fontSize: "150px"}}><GiMusicalNotes /></p>}
     </div>
 }
 

@@ -42,7 +42,7 @@ const QuestionMessage = ({game, text, image, audio, video}) => {
         {image && <ImagePlayer autoPlay game={game} url={image}/>}
         {audio && <AudioPlayer controls autoPlay={true} game={game} url={audio}/>}
         {video && <VideoPlayer controls autoPlay={true} game={game} url={video}/>}
-        {!text && !image && !video && <p style={{fontSize: "150px"}}><GiMusicalNotes /></p>}
+        {!text && !image && !video && audio && <p style={{fontSize: "150px"}}><GiMusicalNotes /></p>}
     </div>
 }
 
