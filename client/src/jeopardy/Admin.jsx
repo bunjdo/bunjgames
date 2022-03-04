@@ -147,10 +147,10 @@ const useStateContent = (game) => {
             return <Question game={game}/>
         case "final_bets": return <FinalBets players={game.players}/>
         case "final_answer":
-            return <BlockContent>
-                <Question game={game}/>
-                <FinalAnswers players={game.players}/>
-            </BlockContent>
+            return [
+                <Question game={game} id={1}/>,
+                <FinalAnswers players={game.players} id={2}/>
+            ]
         case "final_player_answer": return <FinalAnswers players={game.players} answerer={game.answerer}/>
         case "final_player_bet": return <FinalBets players={game.players} answerer={game.answerer}/>
         case "game_end": return <TextContent>Game over</TextContent>
