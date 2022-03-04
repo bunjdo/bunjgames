@@ -9,6 +9,7 @@ import {Content, ExitButton, GameView, TextContent, QRCodeContent} from "common/
 import styles from "jeopardy/View.scss";
 import {useHistory} from "react-router-dom";
 import {generateClientUrl} from "../common/View";
+import {GiMusicalNotes} from "react-icons/all";
 
 
 const Music = {
@@ -41,6 +42,7 @@ const QuestionMessage = ({game, text, image, audio, video}) => {
         {image && <ImagePlayer autoPlay game={game} url={image}/>}
         {audio && <AudioPlayer controls autoPlay={true} game={game} url={audio}/>}
         {video && <VideoPlayer controls autoPlay={true} game={game} url={video}/>}
+        {!text && !image && !video && <p style={{fontSize: "150px"}}><GiMusicalNotes /></p>}
     </div>
 }
 
@@ -69,8 +71,12 @@ const useStateContent = (game) => {
                 game={game} text={question.text} image={question.image} audio={question.audio} video={question.video}
             />;
         case "question_end":
+            let answer_image = question.answer_image;
+            if (!question.answer_image && !question.answer_text && !question.answer_video) {
+                answer_image = question.image;
+            }
             return <QuestionMessage
-                game={game} text={question.answer_text} image={question.answer_image}
+                game={game} text={question.answer_text} image={answer_image}
                 audio={question.answer_audio} video={question.answer_video}
             />;
         case "final_player_answer":
