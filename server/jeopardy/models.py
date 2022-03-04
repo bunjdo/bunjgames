@@ -146,9 +146,17 @@ class Game(models.Model):
             last_round = i + 1
             for theme in round.find(namespace + 'themes').findall(namespace + 'theme'):
                 theme_name = theme.get('name')
+
+                info = theme.find(namespace + 'info')
+                theme_comment = None
+                if info is not None:
+                    comments = info.find(namespace + 'comments')
+                    if comments is not None:
+                        theme_comment = comments.text
+
                 if theme.find(namespace + 'questions') is None:
                     continue
-                theme_model = Theme.objects.create(name=theme_name, round=i+1, game=self)
+                theme_model = Theme.objects.create(name=theme_name, comment=theme_comment, round=i+1, game=self)
                 for question in theme.find(namespace + 'questions').findall(namespace + 'question')[:8]:
                     question_price = question.get('price')
                     type = Question.TYPE_STANDARD
@@ -452,6 +460,7 @@ class Game(models.Model):
 
 class Theme(models.Model):
     name = models.CharField(max_length=255)
+    comment = models.TextField(null=True, default=None)
     round = models.IntegerField(db_index=True)
     is_removed = models.BooleanField(default=False)
     game = models.ForeignKey(Game, on_delete=models.CASCADE, null=True, related_name='themes')

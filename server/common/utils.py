@@ -69,7 +69,8 @@ def game_assets_post_process(parent: str) -> typing.Dict[str, str]:
             gain = audio.dBFS - (-14)
             audio = audio.remove_dc_offset()
             audio = audio.apply_gain(-gain)
-            audio = audio.compress_dynamic_range()
+            # this code is too slow to be executed in real time
+            # audio = audio.compress_dynamic_range()
             audio.export(target_path, format="mp3")
 
             path.unlink()

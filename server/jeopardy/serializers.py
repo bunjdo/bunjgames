@@ -42,6 +42,7 @@ class QuestionSerializer(serializers.Serializer):
 class ThemeSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField()
+    comment = serializers.CharField()
     is_removed = serializers.BooleanField()
     questions = QuestionSerializer(many=True)
 
