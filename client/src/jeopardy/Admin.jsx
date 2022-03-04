@@ -17,7 +17,7 @@ import {BlockContent, Content, Footer, FooterItem, GameAdmin, Header, TextConten
 import {ThemesList, ThemesGrid, QuestionsGrid} from "jeopardy/Themes";
 import {getStatusName, EventType, getRoundName} from "jeopardy/Common";
 import styles from "jeopardy/Admin.scss";
-import {FaVolumeMute} from "react-icons/all";
+import {FaVolumeMute, MdReplayCircleFilled} from "react-icons/all";
 
 
 const QuestionEvent = ({question}) => {
@@ -204,6 +204,10 @@ const JeopardyAdmin = () => {
     }, [game]);
 
     const onSoundStop = () => JEOPARDY_API.intercom("sound_stop");
+    const onReplay = () => {
+        JEOPARDY_API.intercom("sound_stop");
+        JEOPARDY_API.intercom("replay");
+    }
     const onLogout = () => {
         JEOPARDY_API.logout();
         history.push("/admin");
@@ -218,6 +222,7 @@ const JeopardyAdmin = () => {
     return <GameAdmin>
         <Header gameName={"Jeopardy"} token={game.token} stateName={getStatusName(game.state)}>
             <OvalButton onClick={onSoundStop}><FaVolumeMute /></OvalButton>
+            <OvalButton onClick={onReplay}><MdReplayCircleFilled /></OvalButton>
             <ButtonLink to={"/admin"}>Home</ButtonLink>
             <ButtonLink to={"/jeopardy/view"}>View</ButtonLink>
             <Button onClick={onLogout}>Logout</Button>

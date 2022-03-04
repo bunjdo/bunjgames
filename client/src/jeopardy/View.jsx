@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 
 import {AudioPlayer, HowlWrapper, ImagePlayer, VideoPlayer, Loading, useGame, useAuth} from "../common/Essentials";
 import {AdminAuth} from "../common/Auth";
@@ -36,17 +36,17 @@ const resetSounds = () => {
     Object.values(Music).forEach(m => m.stop());
 };
 
-const QuestionMessage = ({game, text, image, audio, video}) => {
+const QuestionMessage = ({game, text, image, audio, video, isContentPlaying}) => {
     return <div className={styles.media}>
         {text && !image && !video && <p>{text}</p>}
-        {image && <ImagePlayer autoPlay game={game} url={image}/>}
-        {audio && <AudioPlayer controls autoPlay={true} game={game} url={audio}/>}
-        {video && <VideoPlayer controls autoPlay={true} game={game} url={video}/>}
-        {!text && !image && !video && audio && <p style={{fontSize: "150px"}}><GiMusicalNotes /></p>}
+        {image && <ImagePlayer game={game} url={image}/>}
+        {audio && <AudioPlayer controls playing={isContentPlaying} game={game} url={audio}/>}
+        {video && <VideoPlayer controls playing={isContentPlaying} game={game} url={video}/>}
+        {!text && !image && !video && audio && <p style={{fontSize: "150px"}}><GiMusicalNotes/></p>}
     </div>
 }
 
-const useStateContent = (game) => {
+const useStateContent = (game, isContentPlaying) => {
     const {question} = game;
     const answerer = game.answerer && game.players.find(p => p.id === game.answerer);
 
@@ -69,6 +69,7 @@ const useStateContent = (game) => {
         case "question": case "answer": case "final_question": case "final_answer":
             return <QuestionMessage
                 game={game} text={question.text} image={question.image} audio={question.audio} video={question.video}
+                isContentPlaying={isContentPlaying}
             />;
         case "question_end":
             let answer_image = question.answer_image;
@@ -78,6 +79,7 @@ const useStateContent = (game) => {
             return <QuestionMessage
                 game={game} text={question.answer_text} image={answer_image}
                 audio={question.answer_audio} video={question.answer_video}
+                isContentPlaying={isContentPlaying}
             />;
         case "final_player_answer":
             return <TextContent>{answerer.final_answer || "⸻"}</TextContent>;
@@ -89,8 +91,12 @@ const useStateContent = (game) => {
 };
 
 const JeopardyView = () => {
+    const [isContentPlaying, setContentPlaying] = useState(true);
     const game = useGame(JEOPARDY_API, (game) => {
         resetSounds();
+        if (["question", "question_end", "final_question"].includes(game.state) && !isContentPlaying) {
+            setContentPlaying(true);
+        }
         switch (game.state) {
             case "intro": Music.intro.play(); break;
             case "round": Music.round.play(); break;
@@ -108,7 +114,8 @@ const JeopardyView = () => {
     }, (message) => {
         switch (message) {
             case "skip": Sounds.skip.play(); break;
-            case "sound_stop": resetSounds(); break;
+            case "sound_stop": resetSounds(); setContentPlaying(false); break;
+            case "replay": setContentPlaying(true); break;
         }
     });
 
@@ -132,7 +139,7 @@ const JeopardyView = () => {
 
     return <GameView>
         <ExitButton onClick={onLogout}/>
-        <Content>{useStateContent(game)}</Content>
+        <Content>{useStateContent(game, isContentPlaying)}</Content>
     </GameView>
 }
 

@@ -66,11 +66,11 @@ const isWhirligigAvailable = (game) => {
 const QuestionMessage = ({game, text, image, audio, video}) => {
     return <div className={styles.media}>
         {text && !image && !video && <div><p>{text}</p></div>}
-        {image && <div><ImagePlayer autoPlay game={game} url={image}/></div>}
+        {image && <div><ImagePlayer game={game} url={image}/></div>}
         {["question_start", "right_answer"].includes(game.state) && audio &&
-        <div><AudioPlayer controls autoPlay={true} game={game} url={audio}/></div>}
+        <div><AudioPlayer controls playing={true} game={game} url={audio}/></div>}
         {["question_start", "right_answer"].includes(game.state) && video &&
-        <div><VideoPlayer controls autoPlay={true} game={game} url={video}/></div>}
+        <div><VideoPlayer controls playing={true} game={game} url={video}/></div>}
         {!text && !image && !video && audio && <p style={{fontSize: "150px"}}><GiMusicalNotes /></p>}
     </div>
 }
