@@ -5,6 +5,7 @@ services:
     image: nginx:1.21.6
     volumes:
       - ./nginx.dev.conf:/etc/nginx/nginx.conf
+      - ./media:/app/media
     ports:
       - "8080:80"
     depends_on:
