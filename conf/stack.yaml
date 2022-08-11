@@ -24,7 +24,7 @@ services:
     image: &server bunjdo/bunjgames-server:latest
     command: daphne -b 0.0.0.0 -p 80 server.asgi:application
     volumes:
-      - ./media:/app/media
+      - ../server/media:/app/media
     environment: &server_environment
       - DEBUG=false
       - DATABASE_HOST=db
