@@ -5,6 +5,7 @@ import string
 import traceback
 import typing
 import zipfile
+import logging
 from pathlib import Path
 from urllib.parse import unquote
 from pydub import AudioSegment
@@ -12,6 +13,9 @@ from pydub import AudioSegment
 from rest_framework.exceptions import APIException
 from django.conf import settings
 from hashids import Hashids
+
+
+logger = logging.getLogger(__name__)
 
 
 class BadFormatException(APIException):
@@ -51,6 +55,7 @@ def generate_token(id):
 
 def game_assets_post_process(parent: str) -> typing.Dict[str, str]:
     if not settings.GAME_ASSETS_POST_PROCESS:
+        logger.debug("Game file post-processing is disabled, skipping.")
         return {}
 
     path_list = Path(parent).rglob('*.*')

@@ -1,4 +1,4 @@
-FROM node:16-alpine AS builder
+FROM node:16-alpine3.15 AS builder
 
 RUN apk add --update --no-cache g++ make python2
 WORKDIR /app

@@ -28,6 +28,7 @@ services:
     environment: &server_environment
       - DEBUG=false
       - DATABASE_HOST=db
+      - GAME_ASSETS_POST_PROCESS=false
     depends_on:
       - db
     networks:

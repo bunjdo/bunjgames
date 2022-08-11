@@ -20,9 +20,13 @@ services:
     command: python manage.py runserver 0.0.0.0:80
     volumes:
       - ./media:/app/media
+      - .:/app
     environment: &server_environment
       - DEBUG=true
       - DATABASE_HOST=db
+      - GAME_ASSETS_POST_PROCESS=false
+    ports:
+      - "8000:80"
     depends_on:
       - db
 
@@ -43,7 +47,7 @@ services:
     environment: *server_environment
     depends_on:
       - db
-    restart: no
+    restart: "no"
 
   db:
     image: postgres:13.0
