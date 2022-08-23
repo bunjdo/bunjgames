@@ -154,6 +154,19 @@ const useStateContent = (game) => {
     }
     const {cur_item, cur_question} = game;
 
+    if (game.state === 'questions') {
+        return <BlockContent>
+            {game.items.map((item, index) => (
+                <div key={index}>
+                    {item.questions.length === 1 && Boolean(item.questions[0].author_city)
+                        ? (index === 12 ? "13 - " : "") + item.questions[0].author_name + ', ' + item.questions[0].author_city
+                        : item.name}
+                </div>
+            ))}
+            <div></div>
+        </BlockContent>;
+    }
+
     if (!cur_item || !cur_question) {
         return <TextContent>{getStatusName(game.state)}</TextContent>;
     }
