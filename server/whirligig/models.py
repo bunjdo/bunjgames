@@ -163,6 +163,7 @@ class Game(models.Model):
                 if question_number >= 3:
                     raise BadFormatException('Too many questions')
                 answer_xml = question_xml.find('answer')
+                author_xml = question_xml.find('author')
                 question = Question.objects.create(
                     number=question_number,
                     item=item,
@@ -177,6 +178,9 @@ class Game(models.Model):
                     answer_image=answer_xml.find('image').text,
                     answer_audio=format_audio_url(answer_xml.find('audio').text),
                     answer_video=answer_xml.find('video').text,
+
+                    author_name=author_xml.find('name').text if author_xml is not None and author_xml.find('name') is not None else '',
+                    author_city=author_xml.find('city').text if author_xml is not None and author_xml.find('city') is not None else '',
                 )
 
     def print(self):
@@ -296,6 +300,9 @@ class Question(models.Model):
     answer_image = models.CharField(max_length=255, null=True)
     answer_audio = models.CharField(max_length=255, null=True)
     answer_video = models.CharField(max_length=255, null=True)
+
+    author_name = models.TextField(null=True)
+    author_city = models.TextField(null=True)
 
     class Meta:
         ordering = ['number']

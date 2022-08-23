@@ -47,14 +47,15 @@ const Whirligig = ({game, callback}) => {
                 arrows.set(i, arrow);
                 layer.add(arrow);
             } else {
+                const has_city = item.questions.length === 1 && Boolean(item.questions[0].author_city)
                 const text = new Konva.Text({
                     align: "center",
                     verticalAlign: "middle",
                     fill: "white",
-                    fontSize: 20,
-                    fontStyle: "bold",
-                    text: item.name,
-                    wrap: "char"
+                    fontSize: has_city ? 14: 20,
+                    fontStyle: has_city ? "normal" : "bold",
+                    text: has_city ? item.questions[0].author_city : item.name,
+                    wrap: "word"
                 })
                 items.set(i, text);
                 layer.add(text);
@@ -111,8 +112,8 @@ const Whirligig = ({game, callback}) => {
             })
 
             const feelsBadMan = sectorAngle * radius * 0.85 * 0.8;
-            i.width(feelsBadMan)
-            i.fontSize(screen * 0.04)
+            i.width(feelsBadMan);
+            i.fontSize(i.fontSize() === 20 ? screen * 0.04 : screen * 0.034);
             i.rotation(angle * 180 / Math.PI);
             i.offsetX(i.width() / 2);
             i.offsetY(i.height() / 2);

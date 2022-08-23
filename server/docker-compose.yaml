@@ -13,7 +13,11 @@ services:
       - server
 
   client:
-    build: ../client
+    build:
+      context: ../client
+      dockerfile: ../client/Dockerfile.dev
+    volumes:
+      - ../client:/app
 
   server:
     build: .

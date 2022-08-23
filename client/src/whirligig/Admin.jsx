@@ -146,6 +146,9 @@ const useStateContent = (game) => {
                 <div>Name: {game.cur_item.name}</div>
                 {game.cur_item.description && <div>Description: {game.cur_item.description}</div>}
                 <div>Type: {game.cur_item.type}</div>
+            </div>,
+            game.cur_question.author_name && <div key={3}>
+                <div>Author: {game.cur_question.author_name}, {game.cur_question.author_city}</div>
             </div>
         ]
     }

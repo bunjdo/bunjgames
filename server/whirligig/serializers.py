@@ -20,6 +20,9 @@ class QuestionSerializer(serializers.Serializer):
     answer_audio = serializers.CharField()
     answer_video = serializers.CharField()
 
+    author_name = serializers.CharField()
+    author_city = serializers.CharField()
+
     class Meta:
         model = Question
 
