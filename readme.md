@@ -44,3 +44,28 @@ content.xml structure:
 game packs editor - https://vladimirkhil.com/si/siquester
 
 game packs - https://vladimirkhil.com/si/storage
+
+# Weakest
+
+Text (XML) file with following structure:
+~~~
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE game>
+<game>
+   <questions> <!-- Should contain a lot of questions, recommended amount is 100 - 200 -->
+      <question>
+         <question>question</question> <!-- string -->
+         <answer>answer</answer> <!-- string -->
+      </question>
+      ...
+   </questions>
+   <final_questions> <!-- Minimum 10 questions, recommended 20 -->
+      <question>
+         <question>question</question> <!-- string -->
+         <answer>answer</answer> <!-- string -->
+      </question>
+      ...
+   </final_questions>
+   <score_multiplier>1</score_multiplier> <!-- integer, determines the score multiplyer -->
+</game>
+~~~

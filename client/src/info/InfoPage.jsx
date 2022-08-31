@@ -185,7 +185,27 @@ const AboutPage = () => {
             <div className={styles.title}>The Weakest game file specification:</div>
             <div className={styles.marginBottom}/>
 
-            <div>Coming soon...</div>
+            <div>Text (XML) file with following structure:</div>
+            <div className={styles.marginBottom}/>
+            <div className={css(styles.tab, styles.preWrap)}>{'<?xml version="1.0" encoding="UTF-8"?>\n' +
+                '<!DOCTYPE game>\n' +
+                '<game>\n' +
+                '   <questions> <!-- Should contain a lot of questions, recommended amount is 100 - 200 -->\n' +
+                '      <question>\n' +
+                '         <question>question</question> <!-- string -->\n' +
+                '         <answer>answer</answer> <!-- string -->\n' +
+                '      </question>\n' +
+                '      ...\n' +
+                '   </questions>\n' +
+                '   <final_questions> <!-- Minimum 10 questions, recommended 20 -->\n' +
+                '      <question>\n' +
+                '         <question>question</question> <!-- string -->\n' +
+                '         <answer>answer</answer> <!-- string -->\n' +
+                '      </question>\n' +
+                '      ...\n' +
+                '   </final_questions>\n' +
+                '   <score_multiplier>1</score_multiplier> <!-- integer, determines the score multiplyer -->\n' +
+                '</game>'}</div>
         </div>
 
         <div className={styles.category}>
