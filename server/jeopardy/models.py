@@ -126,12 +126,16 @@ class Game(models.Model):
 
         def format_image_url(url: str):
             if url and url.startswith('@'):
-                return '/Images' + url.replace('@', '/', 1)
+                url = url.replace('@', '', 1)
+            if url:
+                return '/Images/' + url
             return url
 
         def format_audio_url(url: str):
             if url and url.startswith('@'):
-                old_url = 'Audio' + url.replace('@', '/', 1)
+                url = url.replace('@', '', 1)
+            if url:
+                old_url = 'Audio/' + url
                 if old_url in transform_dict:
                     return '/' + transform_dict[old_url]
                 return '/' + old_url
@@ -139,7 +143,9 @@ class Game(models.Model):
 
         def format_video_url(url: str):
             if url and url.startswith('@'):
-                return '/Video' + url.replace('@', '/', 1)
+                url = url.replace('@', '', 1)
+            if url:
+                return '/Video/' + url
             return url
 
         for i, round in enumerate(root.find(namespace + 'rounds').findall(namespace + 'round')):
@@ -183,7 +189,14 @@ class Game(models.Model):
                     post_audio = None
                     post_video = None
 
-                    for atom in question.find(namespace + 'scenario').findall(namespace + 'atom'):
+
+
+                    if question.find(namespace + 'scenario'):
+                        items = question.find(namespace + 'scenario').findall(namespace + 'atom')
+                    else:
+                        items = question.find(namespace + 'params').find(namespace + 'param').findall(namespace + 'item')
+
+                    for atom in items:
                         if atom.get('type') == 'image':
                             if marker_flag:
                                 post_image = atom.text
@@ -194,6 +207,8 @@ class Game(models.Model):
                                 post_audio = atom.text
                             else:
                                 audio = atom.text
+                        elif atom.get('type') == 'audio':
+                            audio = atom.text
                         elif atom.get('type') == 'video':
                             if marker_flag:
                                 post_video = atom.text

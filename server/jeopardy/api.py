@@ -1,6 +1,7 @@
 import logging
 import os
 import shutil
+import traceback
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -42,7 +43,7 @@ class CreateGameAPI(APIView):
             os.remove(os.path.join(settings.MEDIA_ROOT_JEOPARDY, game.token, 'content.xml'))
         except Exception as e:
             shutil.rmtree(os.path.join(settings.MEDIA_ROOT_JEOPARDY, game.token), ignore_errors=True)
-            logger.error(str(e))
+            traceback.print_exc()
             if isinstance(e, BadFormatException) or isinstance(e, BadStateException):
                 raise e
             raise BadFormatException("Bad game file")
