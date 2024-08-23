@@ -36,12 +36,22 @@ const resetSounds = () => {
     Object.values(Music).forEach(m => m.stop());
 };
 
+
+const delocalise = (url) => {
+    let result = url;
+    if (url.slice(7).includes("https:")) {
+        result = url.replace(window.location.protocol + "//" + window.location.hostname, "");
+    }
+    return result;
+}
+
 const QuestionMessage = ({game, text, image, audio, video, isContentPlaying}) => {
+    
     return <div className={styles.media}>
         {text && !image && !video && <p>{text}</p>}
-        {image && <ImagePlayer game={game} url={image}/>}
-        {audio && <AudioPlayer controls playing={isContentPlaying} game={game} url={audio}/>}
-        {video && <VideoPlayer controls playing={isContentPlaying} game={game} url={video}/>}
+        {image && <ImagePlayer game={game} url={delocalise(image)}/>}
+        {audio && <AudioPlayer controls playing={isContentPlaying} game={game} url={delocalise(audio)}/>}
+        {video && <VideoPlayer controls playing={isContentPlaying} game={game} url={delocalise(video)}/>}
         {!text && !image && !video && audio && <p style={{fontSize: "150px"}}><GiMusicalNotes/></p>}
     </div>
 }
